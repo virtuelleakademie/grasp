@@ -1,6 +1,6 @@
 
-from agents.tutor.reasoning import TutorCheckUnderstanding
-from agents.tutor.agent import Iterations
+from tutor.reasoning import TutorCheckUnderstanding
+from tutor.agent import Iterations
 
 if __name__ == "__main__":
     # for testing purposes
@@ -21,4 +21,3 @@ if __name__ == "__main__":
     print(understanding.guiding_question_answered)
     for s in understanding.summary:
         print(s)
-
