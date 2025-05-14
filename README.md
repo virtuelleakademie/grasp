@@ -1,2 +1,1 @@
-# grasp
-GRASP: A Guided Reasoning Assistant for Statistics Practice
+# GRASP: A Guided Reasoning Assistant for Statistics Practice
