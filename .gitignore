@@ -26,3 +26,6 @@ venv/
 
 # Aider
 .aider*
+
+# Testing
+.test/*
