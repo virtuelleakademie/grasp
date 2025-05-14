@@ -3,9 +3,9 @@ import os, sys, random
 
 import chainlit as cl
 
-from agents.tutor.agent import chat, starting_message, Iterations
-from agents.tutor.output_structure import Understanding
-from agents.tutor.logging import LogContainer
+from tutor.agent import chat, starting_message, Iterations
+from tutor.output_structure import Understanding
+from tutor.logging import LogContainer
 
 
 debug = False  # Set to True to see all system messages
@@ -45,7 +45,7 @@ async def start():
         "show_prompts": show_prompts or debug,
         "show_reasoning": show_reasoning or debug,
         })
-    
+
     await starting_message()
 
 @cl.on_message
