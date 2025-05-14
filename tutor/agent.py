@@ -2,9 +2,9 @@ import time
 
 import chainlit as cl
 
-from agents.tutor.exercises import main_question, main_answer, guiding_questions, image, image_solution, guiding_answers, first_message, end_message
-from agents.tutor.reasoning import client, Understanding, Feedback, Instructions, TutorCheckUnderstanding, TutorFeedback, TutorInstructions
-from agents.tutor.helper import with_agent_state
+from tutor.exercises import main_question, main_answer, guiding_questions, image, image_solution, guiding_answers, first_message, end_message
+from tutor.reasoning import client, Understanding, Feedback, Instructions, TutorCheckUnderstanding, TutorFeedback, TutorInstructions
+from tutor.helper import with_agent_state
 
 max_interactions_step = 2 ## maximum number of interactions per guiding question
 max_interactions_checkpoint = 6 ## maximum number of interactions before moving on to the next checkpoint
@@ -12,7 +12,7 @@ max_interactions_checkpoint = 6 ## maximum number of interactions before moving 
 
 class Message:
     """Class to handle messages in the chat."""
-    
+
     def __init__(self, text: str) -> None:
         self.text = text
         self.image = None
@@ -56,7 +56,7 @@ class Message:
         content.update({"type": "text", "text": self.text})
 
         return content
-        
+
     def __add__(self, other) -> 'Message':
         """Concatenate messages."""
         if isinstance(other, Message):
@@ -66,7 +66,7 @@ class Message:
         elif isinstance(other, str):
             self.text += other
         return self
-    
+
     def __iadd__(self, other) -> "Message":
         """Concatenate messages."""
         return self.__add__(other)
@@ -91,7 +91,7 @@ class Iterations:
         self.step += 1
         self.checkpoint += 1
         return
-    
+
     def has_step_iterations_left(self) -> bool:
         """Check if step iterations are within the allowed maximum."""
         return self.step < self.max_step
@@ -107,22 +107,22 @@ class Iterations:
     def has_another_checkpoint(self) -> bool:
         """Check if another checkpoint exists."""
         return self.current_checkpoint <= self.n_checkpoints and not self.finished
-    
+
     def main_question(self) -> str:
         """Get the main question for the current checkpoint."""
         try:
             return main_question[self.current_checkpoint]
         except IndexError:
             raise IndexError("No more checkpoints available.")
-    
+
     def main_answer(self) -> str:
         """Get the main answer for the current checkpoint."""
         return main_answer[self.current_checkpoint]
-    
+
     def image(self) -> str:
         """Get the image path for the current checkpoint."""
         return image[self.current_checkpoint][self.current_step]
-        
+
     def image_solution(self) -> str:
         """Get the image solution path for the current checkpoint."""
         return image_solution[self.current_checkpoint]
@@ -167,10 +167,10 @@ class Iterations:
             if state["debugging"]:
                 print(f"System: Loading guiding question for Checkpoint {self.current_checkpoint} and Step {self.current_step}.")
             message.image = self.image()
-            message += f"\n\nLass uns {"zuerst" if self.current_step == 1 else "jetzt"} über diese Frage nachdenken:\n" 
+            message += f"\n\nLass uns {"zuerst" if self.current_step == 1 else "jetzt"} über diese Frage nachdenken:\n"
             message += self.guiding_question()
         else:
-        
+
             if state["debugging"]:
                 print(f"System: Loading main question for Checkpoint {self.current_checkpoint} at Step {self.current_step} > {self.n_steps[self.current_checkpoint]}.")
             message += "Lass uns nun wieder über die eigentliche Frage nachdenken:\n"
@@ -206,7 +206,7 @@ class Iterations:
                 print(f"System: No more checkpoints available.")
             self.finished = True
         return message
-       
+
 
 
 
@@ -234,7 +234,7 @@ async def chat(input_message: cl.Message, state=None) -> None:
     """Handle incoming messages and respond accordingly."""
     state["log"].write_to_file = True # start writing log to file after first user input
     user_input = input_message.content.strip()
-    message_dict = {"role": "user", "content":[{"type": "text", "text": user_input}]} 
+    message_dict = {"role": "user", "content":[{"type": "text", "text": user_input}]}
     state["messages"].append(message_dict.copy())
     state["log"].append(message_dict.copy())
 
@@ -251,14 +251,14 @@ async def chat(input_message: cl.Message, state=None) -> None:
     state["current_understanding"] = understanding
 
     if state["show_prompts"]:
-        message += f"**System**: Check Understanding:\n{understanding.prompt}\n\n" 
+        message += f"**System**: Check Understanding:\n{understanding.prompt}\n\n"
     if state["show_reasoning"]:
-        message += f"**System**: Thought Process:\n{understanding.view_chain_of_thought()}\n\n" 
-        message += f"**System**: Understanding:\n{understanding.context()}\n\n" 
-    
+        message += f"**System**: Thought Process:\n{understanding.view_chain_of_thought()}\n\n"
+        message += f"**System**: Understanding:\n{understanding.context()}\n\n"
+
     await message.send() # send message in between agent calls, so agents can see each others output. Well. except for check_understanding, that passes info directly in the code.
     message = Message("")
-    
+
     ## We generate feedback separately to ensure homogenous check_understanding without specialiced tutor insctructions, which are needed for Feedback.
     feedback = await generate_feedback(user_input)  ### API call
     if state["show_prompts"]:
@@ -318,7 +318,7 @@ async def chat(input_message: cl.Message, state=None) -> None:
 
 
 
-## API calls 
+## API calls
 
 tutor_instruction = TutorInstructions()
 async def generate_instructions(user_input: str) -> str:
@@ -354,10 +354,8 @@ async def check_understanding(user_input: str) -> Understanding:
 ''''
     # Placeholder for actual understanding check logic.
     return Understanding(
-        chain_of_thought="cot", 
-        main_question_answered=main_question_answered(user_input), 
-        guiding_question_answered=guiding_question_answered(user_input), 
+        chain_of_thought="cot",
+        main_question_answered=main_question_answered(user_input),
+        guiding_question_answered=guiding_question_answered(user_input),
         summary=["summarized unterstanding"])
 '''
-
-
