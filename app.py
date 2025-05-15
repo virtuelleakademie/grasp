@@ -1,11 +1,14 @@
 # app_tutor.py
-import os, sys, random
+import os
+import sys
+import random
 
 import chainlit as cl
 
 from tutor.agent import chat, starting_message, Iterations
 from tutor.output_structure import Understanding
 from tutor.logging import LogContainer
+from tutor.exercise_loader import ExerciseLoader
 
 
 debug = False  # Set to True to see all system messages
@@ -30,21 +33,39 @@ else:
 
 print(f"Starting tutor agent in {mode} mode.")
 
+# Load the exercise file - can be specified through environment variable or use default
+exercise_path = os.getenv("EXERCISE_PATH", "grasp/tutor/exercises/anova_exercise.yaml")
+exercise = None
+
+# Create exercises directory if it doesn't exist
+os.makedirs(os.path.dirname(exercise_path), exist_ok=True)
+
+try:
+    # Attempt to load the exercise file
+    exercise = ExerciseLoader.load(exercise_path)
+    print(f"Loaded exercise: {exercise.metadata.title}")
+except FileNotFoundError as e:
+    print(f"Exercise file not found: {e}")
+    print("Falling back to direct imports from exercises.py")
+except Exception as e:
+    print(f"Error loading exercise file: {e}")
+    print("Falling back to direct imports from exercises.py")
+
 @cl.on_chat_start
 async def start():
-#    cl.user_session.set("agent_mode", "instruction")
     cl.user_session.set("agent_state", {
         "messages": [],
-        "log" : LogContainer(tutor_mode=mode, user="johndoe@bfh.ch"),
+        "log": LogContainer(tutor_mode=mode, user="johndoe@bfh.ch"),
         "tutor_mode": mode,
         "current_checkpoint": 0,
         "current_step": 0,
-        "iterations": Iterations(),
+        "iterations": Iterations(exercise) if exercise else Iterations(),  # Pass the exercise if loaded
+        "exercise": exercise,  # Store the exercise in the state
         "current_understanding": Understanding.empty(),  # start with empty understanding
         "debugging": debug,
         "show_prompts": show_prompts or debug,
         "show_reasoning": show_reasoning or debug,
-        })
+    })
 
     await starting_message()
 
