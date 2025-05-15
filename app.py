@@ -34,7 +34,8 @@ else:
 print(f"Starting tutor agent in {mode} mode.")
 
 # Load the exercise file - can be specified through environment variable or use default
-exercise_path = os.getenv("EXERCISE_PATH", "grasp/tutor/exercises/anova_exercise.yaml")
+default_exercise = "grasp/exercises/anova.yaml"
+exercise_path = os.getenv("EXERCISE_PATH", default_exercise)
 exercise = None
 
 # Create exercises directory if it doesn't exist
