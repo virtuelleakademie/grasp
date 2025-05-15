@@ -24,8 +24,13 @@ venv/
 *.code-workspace
 .vscode/
 
+# Chainlit
+.chainlit*
+
 # Aider
 .aider*
 
 # Testing
 test/*
+logs/tutor/johndoe*
+.files/*
