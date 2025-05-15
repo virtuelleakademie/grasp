@@ -4,7 +4,7 @@ import os
 from typing import Dict, Any
 from pathlib import Path
 
-from grasp.tutor.exercise_model import Exercise
+from tutor.exercise_model import Exercise
 
 class ExerciseLoader:
     """Utility class for loading Exercise objects from various sources.
