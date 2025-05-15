@@ -1,8 +1,25 @@
 import time
+import os
 
 import chainlit as cl
 
-from tutor.exercises import main_question, main_answer, guiding_questions, image, image_solution, guiding_answers, first_message, end_message
+# Import exercise_loader for loading exercises from files
+from tutor.exercise_loader import ExerciseLoader
+
+# Also keep the direct imports for backward compatibility
+try:
+    from tutor.exercises import main_question, main_answer, guiding_questions, image, image_solution, guiding_answers, first_message, end_message
+except ImportError:
+    # Define empty defaults if the module is not found
+    main_question = {}
+    main_answer = {}
+    guiding_questions = {}
+    image = {}
+    image_solution = {}
+    guiding_answers = {}
+    first_message = ""
+    end_message = ""
+
 from tutor.reasoning import client, Understanding, Feedback, Instructions, TutorCheckUnderstanding, TutorFeedback, TutorInstructions
 from tutor.helper import with_agent_state
 
@@ -27,9 +44,9 @@ class Message:
             await self.send_image(to_sidebar=to_sidebar)
         await cl.Message(content=self.text).send()
         if state["iterations"].finished:
-            await cl.AskUserMessage(content=end_message, timeout=10).send()
-#            await cl.Message(content=end_message).send()
-#            time.sleep(10)
+            # Use end_message from exercise if available, otherwise from direct import
+            end_msg = state["exercise"].end_message if state.get("exercise") else end_message
+            await cl.AskUserMessage(content=end_msg, timeout=10).send()
         return
 
     @with_agent_state
@@ -37,10 +54,8 @@ class Message:
         """Send an image."""
         it = state["iterations"]
         element = cl.Image(name=f"Visual Q{it.current_checkpoint} S{it.current_step}", path=self.image)
-#        if to_sidebar:  ## always to both, message and sidebar
         await cl.ElementSidebar.set_elements([element])
         await cl.ElementSidebar.set_title("Checkpoint Image")
-#        else:
         await cl.Message(content="", elements=[element]).send()
         return
 
@@ -74,7 +89,7 @@ class Message:
 
 
 class Iterations:
-    def __init__(self) -> None:
+    def __init__(self, exercise=None) -> None:
         self.total = 0
         self.step = 0
         self.checkpoint = 0
@@ -82,8 +97,17 @@ class Iterations:
         self.max_checkpoint = max_interactions_checkpoint ## Maximum number of interactions before moving on to the next checkpoint
         self.current_step = 0
         self.current_checkpoint = 0
-        self.n_checkpoints = len(main_question)  # Number of checkpoints
-        self.n_steps = {k: len(v) for k, v in guiding_questions.items()}  # Number of steps in the first checkpoint
+        self.exercise = exercise
+
+        # Handle the case when using ExerciseLoader
+        if exercise:
+            self.n_checkpoints = len(exercise.checkpoints)  # Number of checkpoints
+            self.n_steps = {i+1: len(checkpoint.steps) for i, checkpoint in enumerate(exercise.checkpoints)}  # Number of steps per checkpoint
+        else:
+            # Legacy mode: use direct imports
+            self.n_checkpoints = len(main_question)  # Number of checkpoints
+            self.n_steps = {k: len(v) for k, v in guiding_questions.items()}  # Number of steps in the first checkpoint
+
         self.finished = False ## set to true, when exercise is finished. triggers closing of chainlit
 
     def increment(self) -> None:
@@ -111,38 +135,58 @@ class Iterations:
     def main_question(self) -> str:
         """Get the main question for the current checkpoint."""
         try:
-            return main_question[self.current_checkpoint]
+            if self.exercise:
+                return self.exercise.checkpoints[self.current_checkpoint-1].main_question
+            else:
+                return main_question[self.current_checkpoint]
         except IndexError:
             raise IndexError("No more checkpoints available.")
 
     def main_answer(self) -> str:
         """Get the main answer for the current checkpoint."""
-        return main_answer[self.current_checkpoint]
+        if self.exercise:
+            return self.exercise.checkpoints[self.current_checkpoint-1].main_answer
+        else:
+            return main_answer[self.current_checkpoint]
 
     def image(self) -> str:
-        """Get the image path for the current checkpoint."""
-        return image[self.current_checkpoint][self.current_step]
+        """Get the image path for the current checkpoint and step."""
+        try:
+            if self.exercise:
+                img_path = self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].image
+                return img_path
+            else:
+                return image[self.current_checkpoint][self.current_step]
+        except:
+            return None
 
     def image_solution(self) -> str:
         """Get the image solution path for the current checkpoint."""
-        return image_solution[self.current_checkpoint]
-
+        if self.exercise:
+            return self.exercise.checkpoints[self.current_checkpoint-1].image_solution
+        else:
+            return image_solution[self.current_checkpoint]
 
     def guiding_question(self) -> str:
         """Get the guiding question for the current checkpoint and step."""
         try:
-            question = guiding_questions[self.current_checkpoint][self.current_step]
+            if self.exercise:
+                return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_question
+            else:
+                question = guiding_questions[self.current_checkpoint][self.current_step]
+            return question
         except:
-            question = "All guiding questions have been answered."
-        return question
+            return "All guiding questions have been answered."
 
     def guiding_answer(self) -> str:
         """Get the guiding answer for the current checkpoint and step."""
         try:
-            answer = guiding_answers[self.current_checkpoint][self.current_step]
+            if self.exercise:
+                return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_answer
+            else:
+                return guiding_answers[self.current_checkpoint][self.current_step]
         except:
-            answer = ""
-        return answer
+            return ""
 
     @with_agent_state
     def load_next_step(self, state=None) -> str:
@@ -152,7 +196,6 @@ class Iterations:
         if not self.has_checkpoint_iterations_left():
             if state["debugging"]:
                 print(f"System: No more iterations left for Checkpoint {self.current_checkpoint}.")
-#            message += "Let's move on to the next checkpoint.\n"
             message += self.load_next_checkpoint()
             return message
 
@@ -170,7 +213,6 @@ class Iterations:
             message += f"\n\nLass uns {"zuerst" if self.current_step == 1 else "jetzt"} über diese Frage nachdenken:\n"
             message += self.guiding_question()
         else:
-
             if state["debugging"]:
                 print(f"System: Loading main question for Checkpoint {self.current_checkpoint} at Step {self.current_step} > {self.n_steps[self.current_checkpoint]}.")
             message += "Lass uns nun wieder über die eigentliche Frage nachdenken:\n"
@@ -193,7 +235,6 @@ class Iterations:
         if self.has_another_checkpoint():
             if state["debugging"]:
                 print(f"System: Loading main question for Checkpoint {self.current_checkpoint} at Step {self.current_step}.")
-#            message.image = self.image()
             main_question = self.main_question()
             guiding_question = self.load_next_step()
             message += (
@@ -208,15 +249,16 @@ class Iterations:
         return message
 
 
-
-
 @with_agent_state
 async def starting_message(state=None) -> None:
     """Send a starting message to the user."""
+    # Choose first_message from exercise or direct import
+    first_msg = state["exercise"].first_message if state.get("exercise") else first_message
+
     message = Message(f"""
 Gruezi! Ich bin heute dein Tutor für Statistik.
 
-{first_message}
+{first_msg}
 
 Wir werden nun einige Fragen durchgehen, die dir helfen sollen, das Konzept besser zu verstehen.
 Ich werde dir Rückmeldungen und Anleitungen geben, damit du die Aufgaben selbstständig bearbeiten kannst.
@@ -278,9 +320,9 @@ async def chat(input_message: cl.Message, state=None) -> None:
         if understanding.main_question_answered:
             message += "\nYou Du hast die **zentrale Frage** richtig beantwortet!\n\n"
 
-        if image_solution[iterations.current_checkpoint]:
+        if iterations.image_solution():
             message_solution_image = Message("Hier siehst du eine Zusammenfassung der Lösung.")
-            message_solution_image.image = image_solution[iterations.current_checkpoint]
+            message_solution_image.image = iterations.image_solution()
             await message_solution_image.send(to_sidebar=True)
 
         message += "Dass hier ist die Musterantwort der zentralen Frage: \n"
@@ -304,7 +346,6 @@ async def chat(input_message: cl.Message, state=None) -> None:
         ## continue with the same guiding question
         if state["debugging"]:
             message += f"**System**: Continuing with the same guiding question.\n"
-#        message += "\n\nLet's try again.\n"
         message += "\n\n"
         instructions = await generate_instructions(user_input)  ### API call
         if state["show_prompts"]:
@@ -325,37 +366,15 @@ async def generate_instructions(user_input: str) -> str:
     """Generate instructions based on user input."""
     instructions = await tutor_instruction.generate_instructions(user_input)
     return instructions
-'''
-    # Placeholder for actual instructions generation logic.
-    return Instructions(
-        chain_of_thought="cot",
-        instruction = f"Instructions based on: {user_input}"
-    )
-'''
 
 tutor_feedback = TutorFeedback()
 async def generate_feedback(user_input: str) -> Feedback:
     """Generate feedback based on user input."""
     feedback = await tutor_feedback.generate_feedback(user_input)
     return feedback
-'''
-    # Placeholder for actual feedback generation logic.
-    return Feedback(
-        chain_of_thought="cot",
-        feedback = f"Feedback based on: {user_input}"
-    )
-'''
 
 tutor_check = TutorCheckUnderstanding()
 async def check_understanding(user_input: str) -> Understanding:
     """Check if the user understands the concept."""
     understanding = await tutor_check.check_understanding(user_input)
     return understanding
-''''
-    # Placeholder for actual understanding check logic.
-    return Understanding(
-        chain_of_thought="cot",
-        main_question_answered=main_question_answered(user_input),
-        guiding_question_answered=guiding_question_answered(user_input),
-        summary=["summarized unterstanding"])
-'''
