@@ -1,0 +1,46 @@
+metadata:
+  title: "Einführung in die Varianzanalyse"
+  topic: "ANOVA"
+  level: "beginner"
+  language: "de"
+  author: "Andrew Ellis"
+  tags: ["ANOVA", "F-Test", "Koffein", "Müdigkeit"]
+  version: "1.0"
+  date_created: 2025-05-13
+
+first_message: >
+  Ich helfe dir heute das Prinzip der Varianzanalyse (ANOVA) zu verstehen, 
+  wie und wofür es eingesetzt wird.
+  Ziel der ANOVA ist es, herauszufinden, ob sich eine bestimmte Beobachtungsgrösse 
+  zwischen verschiedenen Gruppen wesentlich unterscheidet.
+
+end_message: >
+  Gute Arbeit! Du hast die Aufgabe beendet.
+  Danke für deinen tollen Einsatz!
+
+checkpoints:
+  - checkpoint_number: 1
+    main_question: >
+      Dieses Bild zeigt die Konzentrationswerte in Abhängigkeit von vorherigem Koffeinkonsum. 
+      Klicke einmal darauf, um die Details zu sehen. 
+      Diesen Daten nach zu urteilen: hat Koffein eine Auswirkung auf Konzentration? 
+      Ist diese Auswirkung signifikant?
+    main_answer: >
+      Beobachtungen:
+      - der Mittelwert steigt mit Koffeinkonsum leicht an.
+      - die Wurzel der Quadratsumme ist deutlich grösser als dieser Anstieg.
+      - der resultierende F-Wert ist kleiner als der kritische Wert
+
+      Schlussfolgerung:
+      Mittelwert und mittlere Quadratsumme sind ein guter Hinweis, **der subkritische F-Wert lässt darauf schliessen,
+      dass sich kein signifikanter Effekt von Koffein auf die Konzentration feststellen lässt.**
+    image_solution: "static/Question_1_summary.png"
+    steps:
+      - step_number: 1
+        guiding_question: "Wie kann ich in Zahlen feststellen, wie stark Koffeinkonsum die Konzentration im Mittel beeinflusst?"
+        guiding_answer: >
+          Der Mittelwert einer Gruppen schätzt den Erwartungswert für Personen der Gruppe. 
+          Der Effekt der Gruppe ist definiert als die Abweichung ihres Mittelwerts vom Gesamtmittelwert. 
+          **Die Differenz zwischen den zwei Gruppenmittelwerten ist der Haupteffekt**, der die Differenz ihrer Effekte quantifiziert.
+        image: "static/Question_1_Step_0.png"
+      # Add remaining steps here...
