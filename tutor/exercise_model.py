@@ -53,12 +53,3 @@ class Exercise(BaseModel):
     first_message: str = Field(..., description="Tutor's opening message to the student")
     end_message: str = Field(..., description="Final message shown after the last checkpoint")
     checkpoints: List[Checkpoint] = Field(..., description="Sequential learning checkpoints")
-
-
-# %%
-
-example_step = Step.create_example()
-
-# Now you have a fully initialized Step instance
-print(example_step.guiding_question)  # Shows the question
-print(example_step.guiding_answer)    # Shows the answer
