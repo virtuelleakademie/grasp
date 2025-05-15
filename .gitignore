@@ -31,6 +31,5 @@ venv/
 .aider*
 
 # Testing
-test/*
 logs/tutor/johndoe*
 .files/*
