@@ -1,82 +1,101 @@
 import yaml
 import json
 import os
-from typing import Dict, Union, Any
+from typing import Dict, Any
+from pathlib import Path
 
-from tutor.exercise_model import Exercise
+from grasp.tutor.exercise_model import Exercise
 
 class ExerciseLoader:
+    """Utility class for loading Exercise objects from various sources.
+
+    This class provides methods to load exercises from:
+    - YAML files
+    - JSON files
+    - Python dictionaries
+
+    Examples:
+        # Load from a file (automatically detects format from extension)
+        exercise = ExerciseLoader.load('exercises/calculus/derivatives.yaml')
+
+        # Load from a specific format
+        exercise = ExerciseLoader.from_json('exercises/statistics/anova.json')
+
+        # Load from a dictionary
+        data = {...}  # Dictionary matching Exercise structure
+        exercise = ExerciseLoader.from_dict(data)
+    """
+
+    @staticmethod
+    def load(file_path: str) -> Exercise:
+        """Load an exercise from a file, automatically detecting format from file extension.
+
+        Args:
+            file_path: Path to the YAML or JSON file containing exercise data
+
+        Returns:
+            Exercise: A validated Exercise instance
+
+        Raises:
+            FileNotFoundError: If the file doesn't exist
+            ValueError: If the file extension is not supported (.yaml, .yml, or .json)
+        """
+        path = Path(file_path)
+
+        if not path.exists():
+            raise FileNotFoundError(f"Exercise file not found: {file_path}")
+
+        extension = path.suffix.lower()
+
+        if extension in ('.yaml', '.yml'):
+            return ExerciseLoader.from_yaml(file_path)
+        elif extension == '.json':
+            return ExerciseLoader.from_json(file_path)
+        else:
+            raise ValueError(f"Unsupported file extension: {extension}. Use .yaml, .yml, or .json")
+
     @staticmethod
     def from_yaml(file_path: str) -> Exercise:
-        """Load an exercise from a YAML file."""
-        with open(file_path, 'r') as file:
-            data = yaml.safe_load(file)
-        return Exercise.model_validate(data)
+        """Load an exercise from a YAML file.
+
+        Args:
+            file_path: Path to the YAML file
+
+        Returns:
+            Exercise: A validated Exercise instance
+        """
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                data = yaml.safe_load(file)
+            return Exercise.model_validate(data)
+        except yaml.YAMLError as e:
+            raise ValueError(f"Invalid YAML in exercise file: {e}")
 
     @staticmethod
     def from_json(file_path: str) -> Exercise:
-        """Load an exercise from a JSON file."""
-        with open(file_path, 'r') as file:
-            data = json.load(file)
-        return Exercise.model_validate(data)
+        """Load an exercise from a JSON file.
+
+        Args:
+            file_path: Path to the JSON file
+
+        Returns:
+            Exercise: A validated Exercise instance
+        """
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+            return Exercise.model_validate(data)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON in exercise file: {e}")
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> Exercise:
-        """Create an exercise from a Python dictionary."""
+        """Create an exercise from a Python dictionary.
+
+        Args:
+            data: Dictionary containing exercise data
+
+        Returns:
+            Exercise: A validated Exercise instance
+        """
         return Exercise.model_validate(data)
-
-    @staticmethod
-    def from_legacy_format(
-        first_message: str,
-        end_message: str,
-        main_question: Dict[int, str],
-        main_answer: Dict[int, str],
-        guiding_questions: Dict[int, Dict[int, str]],
-        guiding_answers: Dict[int, Dict[int, str]],
-        image: Dict[int, Dict[int, Union[str, None]]],
-        image_solution: Dict[int, Union[str, None]],
-        metadata: Dict[str, Any] = None
-    ) -> Exercise:
-        """Convert legacy format to the new Exercise model."""
-        if metadata is None:
-            metadata = {
-                "title": "ANOVA Exercise",
-                "topic": "ANOVA",
-                "level": "beginner",
-                "language": "de",
-                "author": "Legacy System",
-                "tags": ["ANOVA", "F-Test"],
-                "version": "1.0"
-            }
-
-        # Create checkpoints from legacy data
-        checkpoints = []
-        for cp_num in sorted(main_question.keys()):
-            steps = []
-            for step_num in sorted(guiding_questions.get(cp_num, {}).keys()):
-                step = Step(
-                    step_number=step_num,
-                    guiding_question=guiding_questions[cp_num][step_num],
-                    guiding_answer=guiding_answers[cp_num].get(step_num, ""),
-                    image=image.get(cp_num, {}).get(step_num)
-                )
-                steps.append(step)
-
-            checkpoint = Checkpoint(
-                checkpoint_number=cp_num,
-                main_question=main_question[cp_num],
-                main_answer=main_answer[cp_num],
-                image_solution=image_solution.get(cp_num),
-                steps=steps
-            )
-            checkpoints.append(checkpoint)
-
-        # Create the full exercise
-        exercise = Exercise(
-            metadata=ExerciseMetadata(**metadata),
-            first_message=first_message,
-            end_message=end_message,
-            checkpoints=checkpoints
-        )
-
-        return exercise
