@@ -32,6 +32,7 @@ venv/
 # Testing
 logs/tutor/johndoe*
 .files/*
+examples/test-*
 
 # Files
 assets/pdfs/*
