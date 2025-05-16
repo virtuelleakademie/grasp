@@ -38,6 +38,13 @@ class Checkpoint(BaseModel):
     image_solution: Optional[str] = Field(None, description="Optional image illustrating the final solution")
     steps: List[Step] = Field(..., description="Ordered guiding questions and their answers")
 
+    @validator('steps')
+    def check_sequential_steps(cls, steps):
+        for i in range(len(steps) - 1):
+            if steps[i].step_number + 1 != steps[i + 1].step_number:
+                raise ValueError("Steps should be sequentially numbered.")
+        return steps
+
 class ExerciseMetadata(BaseModel):
     title: str = Field(..., description="Name of the exercise")
     topic: str = Field(..., description="Topic area, e.g., ANOVA, Regression")
