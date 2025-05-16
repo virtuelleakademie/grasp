@@ -118,7 +118,13 @@ def generate_exercise(
             markdown_file="resources/statistics/anova_concepts.md"
         )
     """
+    print(f"Initializing exercise generator with model: {model}")
     generator = ExerciseGenerator(api_key=api_key, model=model)
+    
+    print(f"Starting exercise generation based on prompt:\n{prompt[:100]}...")
+    if markdown_file:
+        print(f"Using additional content from: {markdown_file}")
+        
     return generator.generate(prompt, markdown_file)
 
 
