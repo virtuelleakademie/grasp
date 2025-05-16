@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional, Dict, ClassVar
-from datetime import date
+# Remove the date import and use string instead
+# from datetime import date
 import json
 from enum import Enum
 from pathlib import Path
@@ -13,7 +14,7 @@ class DifficultyLevel(str, Enum):
     EXPERT = "expert"
 
 class Step(BaseModel):
-    step_number: int = Field(..., ge=1, description="Strictly sequential step number starting from 1")
+    step_number: int = Field(..., description="Strictly sequential step number starting from 1")
     guiding_question: str = Field(..., description="A Markdown-formatted question, optionally with LaTeX math")
     guiding_answer: str = Field(..., description="Markdown-formatted answer, optionally with LaTeX")
     image: Optional[str] = Field(None, description="Relative path or URL to an image for this step")
@@ -30,15 +31,30 @@ class Step(BaseModel):
     def create_example(cls) -> "Step":
         """Create an example Step instance."""
         return cls(**cls.EXAMPLE)
+    
+    @field_validator('step_number')
+    @classmethod
+    def validate_step_number(cls, v):
+        if v < 1:
+            raise ValueError("Step number must be 1 or greater")
+        return v
 
 class Checkpoint(BaseModel):
-    checkpoint_number: int = Field(..., ge=1, description="Sequential checkpoint number starting from 1")
+    checkpoint_number: int = Field(..., description="Sequential checkpoint number starting from 1")
     main_question: str = Field(..., description="The primary problem posed at this checkpoint")
     main_answer: str = Field(..., description="The answer or solution summary for the main question")
     image_solution: Optional[str] = Field(None, description="Optional image illustrating the final solution")
     steps: List[Step] = Field(..., description="Ordered guiding questions and their answers")
 
-    @validator('steps')
+    @field_validator('checkpoint_number')
+    @classmethod
+    def validate_checkpoint_number(cls, v):
+        if v < 1:
+            raise ValueError("Checkpoint number must be 1 or greater")
+        return v
+
+    @field_validator('steps')
+    @classmethod
     def check_sequential_steps(cls, steps):
         for i in range(len(steps) - 1):
             if steps[i].step_number + 1 != steps[i + 1].step_number:
@@ -51,12 +67,55 @@ class ExerciseMetadata(BaseModel):
     level: Optional[str] = Field(None, description="Intended difficulty level (e.g., beginner, advanced)")
     language: str = Field(..., description="Exercise language (e.g., 'de', 'en')")
     author: Optional[str] = Field(None, description="Author of the exercise")
-    tags: Optional[List[str]] = Field(default_factory=list, description="Keywords for filtering/search")
-    version: Optional[str] = Field("1.0", description="Format or content version")
-    date_created: Optional[date] = Field(None, description="Optional creation date")
+    tags: Optional[List[str]] = Field(default=None, description="Keywords for filtering/search")
+    version: Optional[str] = Field(None, description="Format or content version")
+    # Change from date type to string type for API compatibility
+    date_created: Optional[str] = Field(None, description="Optional creation date in YYYY-MM-DD format")
 
 class Exercise(BaseModel):
     metadata: ExerciseMetadata
     first_message: str = Field(..., description="Tutor's opening message to the student")
     end_message: str = Field(..., description="Final message shown after the last checkpoint")
     checkpoints: List[Checkpoint] = Field(..., description="Sequential learning checkpoints")
+    
+    @classmethod
+    def create_example(cls) -> "Exercise":
+        """
+        Create an example Exercise instance for documentation and testing.
+        
+        Returns:
+            An example Exercise instance
+        """
+        metadata = ExerciseMetadata(
+            title="Introduction to ANOVA",
+            topic="Statistics",
+            level="beginner",
+            language="en",
+            author="AI Tutor",
+            tags=["statistics", "ANOVA", "hypothesis testing"],
+            version="1.0",
+            # Use string format instead of date object
+            date_created="2023-05-15"
+        )
+        
+        step1 = Step(
+            step_number=1,
+            guiding_question="What does ANOVA stand for and what is its primary purpose?",
+            guiding_answer="ANOVA stands for Analysis of Variance. Its primary purpose is to determine if there are statistically significant differences between the means of three or more independent groups.",
+            image=None
+        )
+        
+        checkpoint = Checkpoint(
+            checkpoint_number=1,
+            main_question="Given the data in the table, perform a one-way ANOVA test to determine if there are significant differences between the three treatment groups.",
+            main_answer="The F-value (10.23) exceeds the critical F-value (3.68) at α=0.05, therefore we reject the null hypothesis and conclude there are significant differences between the treatment groups.",
+            image_solution=None,
+            steps=[step1]
+        )
+        
+        return cls(
+            metadata=metadata,
+            first_message="Welcome to this exercise on Analysis of Variance (ANOVA). I'll guide you through understanding and applying this statistical method.",
+            end_message="Congratulations! You've completed this exercise on ANOVA. You now understand how to use ANOVA and interpret its results.",
+            checkpoints=[checkpoint]
+        )

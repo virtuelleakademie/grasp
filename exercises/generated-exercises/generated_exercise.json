@@ -1,0 +1,222 @@
+{
+  "metadata": {
+    "title": "Einfaktorielle Varianzanalyse mit Messwiederholung (Repeated Measures ANOVA) \u2013 Einsteiger\u00fcbung",
+    "topic": "Varianzanalyse (ANOVA)",
+    "level": "beginner",
+    "language": "de",
+    "author": "Statistik Tutor",
+    "tags": [
+      "ANOVA",
+      "Messwiederholung",
+      "Statistik",
+      "Einsteiger",
+      "Arbeitszufriedenheit"
+    ],
+    "version": "1.0",
+    "date_created": "2024-06-01"
+  },
+  "first_message": "Willkommen zur \u00dcbung zur einfaktoriellen Varianzanalyse mit Messwiederholung! Wir werden gemeinsam Schritt f\u00fcr Schritt die Analyse der Arbeitszufriedenheit \u00fcber drei Zeitpunkte durchf\u00fchren. Ich begleite dich durch die Hypothesenformulierung, Berechnung der Quadratsummen, Durchf\u00fchrung des F-Tests und Interpretation der Ergebnisse. Lass uns starten!",
+  "end_message": "Super, du hast alle Schritte der einfaktoriellen ANOVA mit Messwiederholung erfolgreich durchgearbeitet! Du verstehst nun das Design, die Berechnung der Varianzanteile, den F-Test, Effektgr\u00f6\u00dfen und die Kontrastanalyse. Nutze gerne das R-Skript, um die Analyse zu automatisieren. Viel Erfolg bei deinen weiteren statistischen Analysen!",
+  "checkpoints": [
+    {
+      "checkpoint_number": 1,
+      "main_question": "Wie formulieren wir die Null- und Alternativhypothese f\u00fcr eine einfaktorielle ANOVA mit Messwiederholung?",
+      "main_answer": "Die Nullhypothese (H\u2080) besagt, dass sich die Mittelwerte der abh\u00e4ngigen Variable (Arbeitszufriedenheit) zu den drei Zeitpunkten nicht unterscheiden. Die Alternativhypothese (H\u2081) besagt, dass mindestens ein Mittelwert von den anderen abweicht.",
+      "image_solution": null,
+      "steps": [
+        {
+          "step_number": 1,
+          "guiding_question": "Was bedeutet die Nullhypothese (H\u2080) bei einer Messwiederholungs-ANOVA?",
+          "guiding_answer": "H\u2080: Die Mittelwerte der Arbeitszufriedenheit sind zu allen drei Zeitpunkten gleich. Formal: \\( \\mu_{Anfang} = \\mu_{3Monate} = \\mu_{6Monate} \\).",
+          "image": null
+        },
+        {
+          "step_number": 2,
+          "guiding_question": "Wie formulieren wir die Alternativhypothese (H\u2081)?",
+          "guiding_answer": "H\u2081: Mindestens ein Mittelwert unterscheidet sich von den anderen. Es gibt also eine Ver\u00e4nderung der Arbeitszufriedenheit \u00fcber die Zeit.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "checkpoint_number": 2,
+      "main_question": "Wie berechnen wir die Quadratsummen (QS) f\u00fcr die Gesamtvarianz, zwischen Personen, zwischen Bedingungen und Residualvarianz?",
+      "main_answer": "Wir zerlegen die Gesamtvarianz in QS_total, QS_zwischen_Personen, QS_zwischen_Bedingungen und QS_Residual, indem wir Mittelwerte pro Person, Bedingung und insgesamt verwenden und die Abweichungen quadrieren und aufsummieren.",
+      "image_solution": null,
+      "steps": [
+        {
+          "step_number": 1,
+          "guiding_question": "Wie berechnet man die Gesamtquadratsumme (QS_total)?",
+          "guiding_answer": "QS_total = Summe aller quadrierten Abweichungen aller Messwerte vom Gesamtmittelwert: \\( QS_{tot} = \\sum_{i=1}^n \\sum_{j=1}^k (X_{ij} - \\bar{X}_{..})^2 \\).",
+          "image": null
+        },
+        {
+          "step_number": 2,
+          "guiding_question": "Wie berechnet man die Quadratsumme zwischen Personen (QS_zwischen_Personen)?",
+          "guiding_answer": "QS_zwischen_Personen = Summe der quadrierten Abweichungen der Personenmittelwerte vom Gesamtmittelwert, multipliziert mit der Anzahl der Bedingungen: \\( QS_{Person} = k \\sum_{i=1}^n (\\bar{X}_{i.} - \\bar{X}_{..})^2 \\).",
+          "image": null
+        },
+        {
+          "step_number": 3,
+          "guiding_question": "Wie berechnet man die Quadratsumme zwischen Bedingungen (QS_zwischen_Bedingungen)?",
+          "guiding_answer": "QS_zwischen_Bedingungen = Summe der quadrierten Abweichungen der Bedingungsmittelwerte vom Gesamtmittelwert, multipliziert mit der Anzahl der Personen: \\( QS_{Bedingung} = n \\sum_{j=1}^k (\\bar{X}_{.j} - \\bar{X}_{..})^2 \\).",
+          "image": null
+        },
+        {
+          "step_number": 4,
+          "guiding_question": "Wie berechnet man die Residualquadratsumme (QS_Residual)?",
+          "guiding_answer": "QS_Residual = QS_total - QS_zwischen_Personen - QS_zwischen_Bedingungen. Sie beschreibt die Varianz, die nicht durch Personen- oder Bedingungseffekte erkl\u00e4rt wird.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "checkpoint_number": 3,
+      "main_question": "Wie bestimmen wir die Freiheitsgrade und mittleren Quadratsummen f\u00fcr die ANOVA?",
+      "main_answer": "Die Freiheitsgrade f\u00fcr Bedingungen sind k-1, f\u00fcr Residual (k-1)(n-1). Die mittleren Quadratsummen berechnen sich als Quadratsumme geteilt durch die jeweiligen Freiheitsgrade.",
+      "image_solution": null,
+      "steps": [
+        {
+          "step_number": 1,
+          "guiding_question": "Wie berechnen wir die Freiheitsgrade f\u00fcr die Bedingungen (df_zwischen_Bedingungen)?",
+          "guiding_answer": "df_zwischen_Bedingungen = Anzahl Bedingungen - 1 = 3 - 1 = 2.",
+          "image": null
+        },
+        {
+          "step_number": 2,
+          "guiding_question": "Wie berechnen wir die Freiheitsgrade f\u00fcr den Residualfehler (df_Residual)?",
+          "guiding_answer": "df_Residual = (Anzahl Bedingungen - 1) \u00d7 (Anzahl Personen - 1) = 2 \u00d7 4 = 8.",
+          "image": null
+        },
+        {
+          "step_number": 3,
+          "guiding_question": "Wie berechnen wir die mittlere Quadratsumme zwischen Bedingungen (MQS_zwischen_Bedingungen)?",
+          "guiding_answer": "MQS_zwischen_Bedingungen = QS_zwischen_Bedingungen / df_zwischen_Bedingungen.",
+          "image": null
+        },
+        {
+          "step_number": 4,
+          "guiding_question": "Wie berechnen wir die mittlere Quadratsumme des Residuals (MQS_Residual)?",
+          "guiding_answer": "MQS_Residual = QS_Residual / df_Residual.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "checkpoint_number": 4,
+      "main_question": "Wie f\u00fchren wir den F-Test durch und interpretieren das Ergebnis?",
+      "main_answer": "Der F-Wert wird als Quotient von MQS_zwischen_Bedingungen und MQS_Residual berechnet. Ist F gr\u00f6\u00dfer als der kritische Wert bei \u03b1=0.05, lehnen wir H\u2080 ab und schlie\u00dfen auf signifikante Unterschiede.",
+      "image_solution": null,
+      "steps": [
+        {
+          "step_number": 1,
+          "guiding_question": "Wie berechnet man den F-Wert?",
+          "guiding_answer": "F = MQS_zwischen_Bedingungen / MQS_Residual.",
+          "image": null
+        },
+        {
+          "step_number": 2,
+          "guiding_question": "Wie bestimmen wir den kritischen F-Wert f\u00fcr df1=2 und df2=8 bei \u03b1=0.05?",
+          "guiding_answer": "Aus der F-Verteilungstabelle oder mit Software ergibt sich etwa F_crit \u2248 4.46.",
+          "image": null
+        },
+        {
+          "step_number": 3,
+          "guiding_question": "Wie interpretieren wir das Ergebnis, wenn F > F_crit ist?",
+          "guiding_answer": "Wenn F > F_crit, lehnen wir die Nullhypothese ab und schlie\u00dfen, dass sich die Mittelwerte signifikant unterscheiden.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "checkpoint_number": 5,
+      "main_question": "Wie berechnen und interpretieren wir Effektgr\u00f6\u00dfen \u03b7\u00b2 und \u03b7\u00b2_p?",
+      "main_answer": "\u03b7\u00b2 gibt den Anteil der Gesamtvarianz an, der durch die Bedingungen erkl\u00e4rt wird. \u03b7\u00b2_p ber\u00fccksichtigt nur die Varianz, die durch Bedingungen und Residual erkl\u00e4rt wird. Beide zeigen die Effektst\u00e4rke.",
+      "image_solution": null,
+      "steps": [
+        {
+          "step_number": 1,
+          "guiding_question": "Wie berechnet man den nicht-partiellen Determinationskoeffizienten \u03b7\u00b2?",
+          "guiding_answer": "\u03b7\u00b2 = QS_zwischen_Bedingungen / QS_total.",
+          "image": null
+        },
+        {
+          "step_number": 2,
+          "guiding_question": "Wie berechnet man den partiellen Determinationskoeffizienten \u03b7\u00b2_p?",
+          "guiding_answer": "\u03b7\u00b2_p = QS_zwischen_Bedingungen / (QS_zwischen_Bedingungen + QS_Residual).",
+          "image": null
+        },
+        {
+          "step_number": 3,
+          "guiding_question": "Was sagt uns ein hoher Wert von \u03b7\u00b2 oder \u03b7\u00b2_p?",
+          "guiding_answer": "Ein hoher Wert zeigt, dass ein gro\u00dfer Anteil der Varianz durch die Zeitpunkte erkl\u00e4rt wird, also ein starker Effekt vorliegt.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "checkpoint_number": 6,
+      "main_question": "Wie f\u00fchren wir eine Kontrastanalyse mit einem quadratischen Kontrast (1, -2, 1) durch?",
+      "main_answer": "Wir berechnen f\u00fcr jede Person die Kontrastvariable als gewichtete Summe der Messwerte, bestimmen den Mittelwert und die Standardabweichung der Kontrastwerte, berechnen den t-Wert und pr\u00fcfen die Signifikanz.",
+      "image_solution": null,
+      "steps": [
+        {
+          "step_number": 1,
+          "guiding_question": "Wie berechnet man die Kontrastvariable pro Person mit den Gewichten (1, -2, 1)?",
+          "guiding_answer": "F\u00fcr jede Person: \\( K_i = 1 \\times X_{Anfang} - 2 \\times X_{3Monate} + 1 \\times X_{6Monate} \\).",
+          "image": null
+        },
+        {
+          "step_number": 2,
+          "guiding_question": "Wie berechnet man den Mittelwert und die Standardabweichung der Kontrastvariablen?",
+          "guiding_answer": "Mittelwert: Durchschnitt aller \\( K_i \\). Standardabweichung: Standardabweichung der \\( K_i \\) \u00fcber alle Personen.",
+          "image": null
+        },
+        {
+          "step_number": 3,
+          "guiding_question": "Wie berechnet man den t-Wert f\u00fcr den Kontrast?",
+          "guiding_answer": "t = Mittelwert der Kontrastvariablen / (Standardabweichung / \\( \\sqrt{n} \\) ), mit n = Anzahl Personen.",
+          "image": null
+        },
+        {
+          "step_number": 4,
+          "guiding_question": "Wie beurteilen wir die Signifikanz des quadratischen Trends bei \u03b1=0.05?",
+          "guiding_answer": "Vergleiche den berechneten t-Wert mit dem kritischen t-Wert (df = n-1). Ist |t| gr\u00f6\u00dfer, ist der Trend signifikant.",
+          "image": null
+        }
+      ]
+    },
+    {
+      "checkpoint_number": 7,
+      "main_question": "Wie interpretieren wir die Ergebnisse der ANOVA und der Kontrastanalyse im Kontext der Arbeitszufriedenheit?",
+      "main_answer": "Wir identifizieren die Zeitpunkte mit h\u00f6chsten und niedrigsten Mittelwerten, interpretieren m\u00f6gliche \u201eHoneymoon\u201c oder \u201eHangover\u201c-Effekte und erkl\u00e4ren die Bedeutung eines signifikanten quadratischen Trends als nicht-lineare Ver\u00e4nderung \u00fcber die Zeit.",
+      "image_solution": null,
+      "steps": [
+        {
+          "step_number": 1,
+          "guiding_question": "Welche Bedingung hat den h\u00f6chsten und welche den tiefsten Mittelwert der Arbeitszufriedenheit?",
+          "guiding_answer": "Der h\u00f6chste Mittelwert liegt z.B. am Anfang oder nach 6 Monaten, der tiefste z.B. nach 3 Monaten \u2013 je nach Daten.",
+          "image": null
+        },
+        {
+          "step_number": 2,
+          "guiding_question": "Was bedeutet ein \u201eHoneymoon\u201c-Effekt in diesem Kontext?",
+          "guiding_answer": "Ein \u201eHoneymoon\u201c-Effekt beschreibt eine anf\u00e4nglich hohe Zufriedenheit, die sp\u00e4ter abnimmt.",
+          "image": null
+        },
+        {
+          "step_number": 3,
+          "guiding_question": "Was bedeutet ein \u201eHangover\u201c-Effekt?",
+          "guiding_answer": "Ein \u201eHangover\u201c-Effekt beschreibt eine anf\u00e4nglich niedrige Zufriedenheit, die sich sp\u00e4ter verbessert.",
+          "image": null
+        },
+        {
+          "step_number": 4,
+          "guiding_question": "Was bedeutet ein signifikanter quadratischer Trend in der Kontrastanalyse?",
+          "guiding_answer": "Er zeigt eine nicht-lineare Ver\u00e4nderung der Zufriedenheit \u00fcber die Zeit, z.B. ein Abfallen und anschlie\u00dfendes Ansteigen oder umgekehrt.",
+          "image": null
+        }
+      ]
+    }
+  ]
+}
