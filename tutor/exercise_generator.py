@@ -83,18 +83,17 @@ class ExerciseGenerator:
 
             content = f"{prompt}\n\nUse the following content as reference:\n\n{markdown_content}"
 
-        # Include the Exercise schema in the system message
-        schema_json = json.dumps(Exercise.model_json_schema(), indent=2)
         system_message = (
             "You are an expert educational content creator specializing in creating interactive exercises. "
-            "Generate a well-structured exercise following the Exercise pydantic model. "
-            "Make sure the exercise is coherent, educational, and follows best practices in instructional design.\n\n"
+            "Generate a well-structured exercise that follows best practices in instructional design. "
+            "Make the exercise coherent, educational, and aligned with the provided content."
         )
 
         return [
             {"role": "system", "content": system_message},
             {"role": "user", "content": content}
         ]
+
 
 
 def generate_exercise(
