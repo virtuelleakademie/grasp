@@ -97,7 +97,7 @@ class ExerciseGenerator:
 def generate_exercise(
     prompt: str,
     markdown_file: Optional[str] = None,
-    model: str = "gpt-4o",
+    model: str = "gpt-4.1-mini",
     api_key: Optional[str] = None
 ) -> Exercise:
     """
