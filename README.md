@@ -2,6 +2,42 @@
 
 Welcome to GRASP, a framework for structured statistics tutoring exercises. This document explains how exercises are formatted, loaded, and used in the tutoring system.
 
+
+## 🔧 Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/virtuelleakademie/grasp.git
+cd grasp
+```
+
+### 2. Create and activate a virtual environment
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Add your OpenAI API key
+
+Create a `.env` file in the root of your project with the following content:
+
+```env
+OPENAI_API_KEY=your-openai-api-key
+```
+
+You can get your key at: https://platform.openai.com/account/api-keys
+
+---
+
+
 ## Overview
 
 GRASP combines a structured exercise format with an intelligent tutoring system to provide guided learning experiences for statistics concepts. The system supports:
