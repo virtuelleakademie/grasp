@@ -57,7 +57,7 @@ class ExerciseGenerator:
         try:
             response = self.client.responses.parse(
                 model=self.model,
-                messages=messages,
+                input=messages,
                 text_format=Exercise,
                 temperature=0.7
             )
