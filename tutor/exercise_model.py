@@ -56,7 +56,7 @@ class Checkpoint(BaseModel):
     @field_validator('steps')
     @classmethod
     def check_sequential_steps(cls, steps):
-        for i in range(len(steps) - 1)):
+        for i in range(len(steps) - 1):
             if steps[i].step_number + 1 != steps[i + 1].step_number:
                 raise ValueError("Steps should be sequentially numbered.")
         return steps
