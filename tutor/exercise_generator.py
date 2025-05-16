@@ -54,14 +54,14 @@ class ExerciseGenerator:
         messages = self._build_messages(prompt, markdown_file)
         
         try:
-            response = self.client.beta.chat.completions.parse(
+            response = self.client.responses.parse(
                 model=self.model,
-                messages=messages,
-                response_format={"type": "pydantic_model", "schema": Exercise.model_json_schema()},
+                input=messages,
+                text_format=Exercise,
                 temperature=0.7
             )
             
-            return response.choices[0].message.parsed
+            return response.output_parsed
         except Exception as e:
             raise RuntimeError(f"Error generating exercise: {str(e)}")
     
@@ -81,7 +81,7 @@ class ExerciseGenerator:
         
         system_message = (
             "You are an expert educational content creator specializing in creating interactive exercises. "
-            "Generate a well-structured exercise following the Exercise schema provided. "
+            "Generate a well-structured exercise following the Exercise schema. "
             "Make sure the exercise is coherent, educational, and follows best practices in instructional design."
         )
         
