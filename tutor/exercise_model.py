@@ -60,3 +60,43 @@ class Exercise(BaseModel):
     first_message: str = Field(..., description="Tutor's opening message to the student")
     end_message: str = Field(..., description="Final message shown after the last checkpoint")
     checkpoints: List[Checkpoint] = Field(..., description="Sequential learning checkpoints")
+    
+    @classmethod
+    def create_example(cls) -> "Exercise":
+        """
+        Create an example Exercise instance for documentation and testing.
+        
+        Returns:
+            An example Exercise instance
+        """
+        metadata = ExerciseMetadata(
+            title="Introduction to ANOVA",
+            topic="Statistics",
+            level="beginner",
+            language="en",
+            author="AI Tutor",
+            tags=["statistics", "ANOVA", "hypothesis testing"],
+            version="1.0"
+        )
+        
+        step1 = Step(
+            step_number=1,
+            guiding_question="What does ANOVA stand for and what is its primary purpose?",
+            guiding_answer="ANOVA stands for Analysis of Variance. Its primary purpose is to determine if there are statistically significant differences between the means of three or more independent groups.",
+            image=None
+        )
+        
+        checkpoint = Checkpoint(
+            checkpoint_number=1,
+            main_question="Given the data in the table, perform a one-way ANOVA test to determine if there are significant differences between the three treatment groups.",
+            main_answer="The F-value (10.23) exceeds the critical F-value (3.68) at α=0.05, therefore we reject the null hypothesis and conclude there are significant differences between the treatment groups.",
+            image_solution=None,
+            steps=[step1]
+        )
+        
+        return cls(
+            metadata=metadata,
+            first_message="Welcome to this exercise on Analysis of Variance (ANOVA). I'll guide you through understanding and applying this statistical method.",
+            end_message="Congratulations! You've completed this exercise on ANOVA. You now understand how to use ANOVA and interpret its results.",
+            checkpoints=[checkpoint]
+        )
