@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Optional, List, Dict, Any, Union
 from openai import OpenAI
+from dotenv import load_dotenv
 
 from tutor.exercise_model import Exercise, ExerciseMetadata, Checkpoint, Step
 
@@ -34,6 +35,8 @@ class ExerciseGenerator:
             api_key: OpenAI API key. If None, uses OPENAI_API_KEY environment variable
             model: OpenAI model to use (default: "gpt-4o")
         """
+        # Load environment variables from .env file
+        load_dotenv()
         self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
         self.model = model
     
@@ -120,6 +123,9 @@ if __name__ == "__main__":
     import argparse
     import json
     import yaml
+    
+    # Ensure environment variables are loaded
+    load_dotenv()
     
     parser = argparse.ArgumentParser(description="Generate educational exercises using OpenAI")
     parser.add_argument("prompt", help="Prompt for generating the exercise")
