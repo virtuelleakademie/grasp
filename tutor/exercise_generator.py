@@ -120,12 +120,69 @@ def generate_exercise(
     """
     print(f"Initializing exercise generator with model: {model}")
     generator = ExerciseGenerator(api_key=api_key, model=model)
-    
+
     print(f"Starting exercise generation based on prompt:\n{prompt[:100]}...")
     if markdown_file:
         print(f"Using additional content from: {markdown_file}")
-        
+
     return generator.generate(prompt, markdown_file)
+
+def save_exercise(exercise, base_filename=None, formats=None, exercise_dir=None):
+    """
+    Save an exercise to file(s) in specified format(s).
+
+    Args:
+        exercise: The Exercise object to save
+        base_filename: Base filename without extension (default: 'generated_exercise')
+        formats: List of formats to save in ('json', 'yaml', or both) (default: ['json'])
+        exercise_dir: Directory to save files in (default: 'exercises/generated-exercises')
+
+    Returns:
+        Dictionary of {format: filepath} for each successfully saved format
+    """
+    import os
+    import json
+
+    # Set defaults
+    base_filename = base_filename or "generated_exercise"
+    formats = formats or ["json"]
+    exercise_dir = exercise_dir or "exercises/generated-exercises"
+
+    # Ensure directory exists
+    os.makedirs(exercise_dir, exist_ok=True)
+
+    # Prepare exercise data
+    exercise_data = exercise.model_dump()
+
+    saved_files = {}
+
+    # Handle each format
+    for fmt in formats:
+        filepath = os.path.join(exercise_dir, f"{base_filename}.{fmt}")
+
+        try:
+            if fmt.lower() == "json":
+                with open(filepath, "w", encoding="utf-8") as f:
+                    json.dump(exercise_data, f, indent=2)
+                saved_files["json"] = filepath
+
+            elif fmt.lower() in ["yaml", "yml"]:
+                try:
+                    import yaml
+                    with open(filepath, "w", encoding="utf-8") as f:
+                        yaml.dump(exercise_data, f, sort_keys=False, indent=2)
+                    saved_files["yaml"] = filepath
+                except ImportError:
+                    print("PyYAML is not installed. Skipping YAML output.")
+
+        except Exception as e:
+            print(f"Error saving {fmt} file: {e}")
+
+    # Report results
+    for fmt, path in saved_files.items():
+        print(f"Exercise saved in {fmt.upper()} format to: {path}")
+
+    return saved_files
 
 
 if __name__ == "__main__":
@@ -139,20 +196,24 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate educational exercises using OpenAI")
     parser.add_argument("prompt", help="Prompt for generating the exercise")
     parser.add_argument("--markdown", "-m", help="Path to markdown file with additional content")
-    parser.add_argument("--output", "-o", help="Output file path (.json or .yaml)")
+    parser.add_argument("--output", "-o", help="Output file path (without extension)")
     parser.add_argument("--model", default="gpt-4o", help="OpenAI model to use (default: gpt-4o)")
+    parser.add_argument("--formats", "-f", nargs="+", choices=["json", "yaml"],
+                        default=["json"], help="Output formats (default: json)")
+    parser.add_argument("--output-dir", "-d", default="exercises/generated-exercises",
+                        help="Directory to save output files (default: exercises/generated-exercises)")
     args = parser.parse_args()
 
     exercise = generate_exercise(args.prompt, args.markdown, args.model)
 
     if args.output:
-        output_path = Path(args.output)
-        if output_path.suffix.lower() in ('.yaml', '.yml'):
-            with open(output_path, 'w', encoding='utf-8') as f:
-                yaml.dump(exercise.model_dump(), f, sort_keys=False)
-        else:  # Default to JSON
-            with open(output_path, 'w', encoding='utf-8') as f:
-                json.dump(exercise.model_dump(), f, indent=2)
-        print(f"Exercise saved to {args.output}")
+        # Use the save_exercise function with the provided parameters
+        save_exercise(
+            exercise,
+            base_filename=args.output,
+            formats=args.formats,
+            exercise_dir=args.output_dir
+        )
     else:
+        # Just print to stdout
         print(json.dumps(exercise.model_dump(), indent=2))
