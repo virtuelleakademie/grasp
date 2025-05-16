@@ -74,7 +74,7 @@ metadata:
   language: "en"
   author: "John Doe"
   tags: ["ANOVA", "F-Test", "Statistics"]
-  
+
 first_message: "Today we'll explore Analysis of Variance (ANOVA)..."
 
 end_message: "Great job! You've completed this exercise."
@@ -145,7 +145,9 @@ Three main reasoning components evaluate and respond to student input:
    instructions = await generate_instructions(user_input)
    ```
 
-## Loading Exercises
+## Loading and Generating Exercises
+
+### Loading Existing Exercises
 
 Exercises are loaded from YAML or JSON files using the `ExerciseLoader`:
 
@@ -171,9 +173,67 @@ default_exercise = "grasp/exercises/anova.yaml"
 exercise_path = os.getenv("EXERCISE_PATH", default_exercise)
 ```
 
-## Using with LLMs
+### Generating New Exercises
 
-The exercise format is designed to work well with LLM structured output:
+The `ExerciseGenerator` module automates the creation of new exercises:
+
+```python
+from grasp.tutor.exercise_generator import ExerciseGenerator
+
+# Initialize with optional custom settings
+generator = ExerciseGenerator(model="gpt-4o")
+
+# Generate an exercise
+exercise = generator.generate(
+    "Create a beginner ANOVA exercise that explains F-tests"
+)
+
+# Generate with reference material
+exercise = generator.generate(
+    "Create an exercise on statistical power analysis",
+    markdown_file="resources/statistics/power_analysis.md"
+)
+```
+
+See the `grasp/tutor/README_exercise_generator.md` for complete documentation.
+
+## Generating Exercises
+
+GRASP provides an `ExerciseGenerator` module that simplifies the creation of exercises using OpenAI's structured output:
+
+```python
+from grasp.tutor.exercise_generator import generate_exercise
+
+# Generate a simple exercise
+exercise = generate_exercise(
+    "Generate an ANOVA exercise for beginners in statistics."
+)
+
+# With markdown content as reference
+exercise = generate_exercise(
+    "Generate an exercise based on this content",
+    markdown_file="resources/statistics/anova_concepts.md"
+)
+
+# Save to file
+import json
+with open("generated_exercise.json", "w") as f:
+    json.dump(exercise.model_dump(), f, indent=2)
+```
+
+The generator also supports command-line usage:
+
+```bash
+# Basic usage
+python -m grasp.tutor.exercise_generator "Generate an ANOVA exercise" --output exercise.json
+
+# With markdown reference
+python -m grasp.tutor.exercise_generator "Generate an exercise" --markdown resources/anova.md
+```
+
+### Using Directly with LLMs
+
+The exercise format can also be used directly with LLM structured output:
 
 ```python
 from openai import OpenAI
@@ -183,11 +243,11 @@ client = OpenAI()
 
 response = client.beta.chat.completions.parse(
     model="gpt-4o",
-    input=[{"role": "user", "content": "Generate an ANOVA exercise..." }],
-    text_format=Exercise
+    messages=[{"role": "user", "content": "Generate an ANOVA exercise..." }],
+    response_format={"type": "pydantic_model", "schema": Exercise.model_json_schema()}
 )
 
-exercise = response.output_parsed
+exercise = response.choices[0].message.parsed
 ```
 
 ## Tutor Interaction Flow
@@ -218,9 +278,13 @@ When creating exercises:
 
 - YAML & JSON supported for input/output
 - Human and AI authoring capabilities
+- Automated exercise generation with OpenAI
+- Reference material integration from Markdown files
 - Rich content with Markdown and LaTeX math
 - Optional image support
 - Extensible metadata
 - Strong validation via Pydantic
 
 For complete details on the exercise format, see `grasp/docs/specifications/exercise_requirements.md`.
+For documentation on exercise generation, see `grasp/docs/README_exercise_generator.md`.
+
