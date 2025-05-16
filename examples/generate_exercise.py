@@ -7,6 +7,7 @@ import os
 import sys
 import json
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Add the parent directory to the path to import from grasp modules
 sys.path.append(str(Path(__file__).parent.parent))
@@ -14,6 +15,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from grasp.tutor.exercise_generator import generate_exercise
 
 def main():
+    # Load environment variables from .env file
+    load_dotenv()
+    
     # Generate a simple ANOVA exercise
     prompt = "Generate an ANOVA exercise for beginners in statistics. Include clear explanations and guided steps."
     
