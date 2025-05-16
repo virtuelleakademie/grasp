@@ -59,13 +59,11 @@ class ExerciseGenerator:
                 model=self.model,
                 input=messages,
                 text_format=Exercise,
-                temperature=0.7
+                temperature=0.2
             )
 
-            # Parse the JSON response into an Exercise object
-            response_content = response.choices[0].message.content
-            exercise_data = json.loads(response_content)
-            return Exercise.model_validate(exercise_data)
+            return response.output_parsed
+
         except Exception as e:
             raise RuntimeError(f"Error generating exercise: {str(e)}")
 
