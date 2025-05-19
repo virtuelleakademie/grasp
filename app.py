@@ -53,45 +53,46 @@ async def start():
     tutor_mode = None
     user_id = "anonymous"
 
-    # STEP 1: Try to get user_id from available sources
-    # Check authenticated user if available
-    if hasattr(cl, 'user_session') and hasattr(cl.user_session, 'user') and cl.user_session.user:
-        user = cl.user_session.user
-        if hasattr(user, 'identifier') and user.identifier:
-            user_id = user.identifier
+    # STEP 1: Get user information from user session (according to Chainlit docs)
+    app_user = cl.user_session.get("user")
+    if app_user:
+        user_id = app_user.identifier
 
-            # If user is authenticated, try to get mode from user metadata
-            if hasattr(user, 'metadata') and user.metadata and 'tutor_mode' in user.metadata:
-                candidate_mode = user.metadata.get('tutor_mode', '').lower()
+        # If user is authenticated, try to get mode from user metadata
+        if hasattr(app_user, 'metadata') and app_user.metadata:
+            if 'tutor_mode' in app_user.metadata:
+                candidate_mode = app_user.metadata.get('tutor_mode', '').lower()
                 if candidate_mode in VALID_MODES:
                     tutor_mode = candidate_mode
                     print(f"Using tutor mode '{tutor_mode}' from user metadata for user {user_id}")
 
-    # STEP 2: If still no valid mode, try HTTP headers via context
+    # STEP 2: Try other methods for tutor_mode if not found in user metadata
+    # Safely check and access headers from context
     if not tutor_mode and hasattr(cl, 'context'):
-        # Try to get from headers (lowercased by convention)
-        headers = cl.context.get('headers', {})
-        candidate_mode = headers.get('x-tutor-mode', '').lower()
-        if candidate_mode in VALID_MODES:
-            tutor_mode = candidate_mode
-            print(f"Using tutor mode '{tutor_mode}' from HTTP header for user {user_id}")
+        # Try HTTP headers
+        try:
+            if hasattr(cl.context, 'headers') and cl.context.headers:
+                headers = cl.context.headers
+                if 'x-tutor-mode' in headers:
+                    candidate_mode = headers['x-tutor-mode'].lower()
+                    if candidate_mode in VALID_MODES:
+                        tutor_mode = candidate_mode
+                        print(f"Using tutor mode '{tutor_mode}' from HTTP header for user {user_id}")
+        except (AttributeError, TypeError):
+            pass  # Safely handle if headers access fails
 
-        # If user_id is still default, try to get from headers too
-        if user_id == "anonymous" and 'x-user-id' in headers:
-            user_id = headers.get('x-user-id')
-
-    # STEP 3: If still no valid mode, try query parameters
+    # STEP 3: Try query parameters if available
     if not tutor_mode and hasattr(cl, 'context'):
-        query_params = cl.context.get('query_params', {})
-        if 'mode' in query_params:
-            candidate_mode = query_params.get('mode', '').lower()
-            if candidate_mode in VALID_MODES:
-                tutor_mode = candidate_mode
-                print(f"Using tutor mode '{tutor_mode}' from query parameters for user {user_id}")
-
-        # If user_id is still default, try to get from query params too
-        if user_id == "anonymous" and 'user_id' in query_params:
-            user_id = query_params.get('user_id')
+        try:
+            if hasattr(cl.context, 'query_params') and cl.context.query_params:
+                query_params = cl.context.query_params
+                if 'mode' in query_params:
+                    candidate_mode = query_params['mode'].lower()
+                    if candidate_mode in VALID_MODES:
+                        tutor_mode = candidate_mode
+                        print(f"Using tutor mode '{tutor_mode}' from query parameters for user {user_id}")
+        except (AttributeError, TypeError):
+            pass  # Safely handle if query_params access fails
 
     # STEP 4: Fallback to random mode if all else fails
     if not tutor_mode:
