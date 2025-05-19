@@ -9,21 +9,9 @@
     "format": "yaml"
   },
 
-  "metadata": {
-    "title": "Einführung in die t-Test Analyse",
-    "topic": "t-Test",
-    "level": "intermediate",
-    "language": "de",
-    "author": "Andrew Ellis",
-    "tags": [
-      "t-Test",
-      "parametrische Tests",
-      "Mittelwertvergleich",
-      "Therapiemethode",
-      "Angstsymptome"
-    ],
-    "description": "Eine Übung zur Einführung in die verschiedenen Arten von t-Tests und deren Anwendung bei der Analyse von Therapieeffekten auf Angstsymptome.",
-    "estimated_time_minutes": 30
+  "extended_metadata": {
+    "description": "Eine Übung zur Einführung in die verschiedenen Arten von t-Tests...",
+    "estimated_time_minutes": 10
   },
 
   "content_inventory": {
