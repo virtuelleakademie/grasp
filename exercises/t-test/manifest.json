@@ -29,37 +29,37 @@
   "content_inventory": {
     "images": [
       {
-        "file": "images/Question_1_summary.png",
+        "file": "figures/Question_1_summary.png",
         "description": "Vergleich der Angstsymptomwerte zwischen neuer Therapiemethode und Standardtherapie",
         "used_in": ["checkpoint_1", "main_solution"]
       },
       {
-        "file": "images/Question_1_Step_0.png",
+        "file": "figures/Question_1_Step_0.png",
         "description": "Illustration zum Unterschied zwischen unabhängigem und gepaarten t-Test",
         "used_in": ["checkpoint_1", "step_1"]
       },
       {
-        "file": "images/Question_1_Step_1.png",
+        "file": "figures/Question_1_Step_1.png",
         "description": "Visualisierung der Voraussetzungen für einen t-Test",
         "used_in": ["checkpoint_1", "step_2"]
       },
       {
-        "file": "images/Question_1_Step_2.png",
+        "file": "figures/Question_1_Step_2.png",
         "description": "Interpretation eines signifikanten t-Tests",
         "used_in": ["checkpoint_1", "step_3"]
       },
       {
-        "file": "images/Question_2_Step_0.png",
+        "file": "figures/Question_2_Step_0.png",
         "description": "Ergebnisse eines gepaarten t-Tests zur Therapiewirksamkeit",
         "used_in": ["checkpoint_2", "main_solution"]
       },
       {
-        "file": "images/Question_2_Step_1.png",
+        "file": "figures/Question_2_Step_1.png",
         "description": "Erklärung des Ein-Stichproben-t-Tests",
         "used_in": ["checkpoint_2", "step_1"]
       },
       {
-        "file": "images/Question_2_Step_2.png",
+        "file": "figures/Question_2_Step_2.png",
         "description": "Bedeutung der Effektgröße bei der Interpretation von t-Tests",
         "used_in": ["checkpoint_2", "step_2"]
       }
