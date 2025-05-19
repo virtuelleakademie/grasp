@@ -51,7 +51,7 @@ To start the GRASP tutoring system with the default exercise:
 chainlit run app.py -w
 ```
 
-You can specify a custom exercise or a tutoring mode.
+You can specify a custom exercise, a tutoring mode, or a combination thereof.
 
 **Exercise**:
 
@@ -71,6 +71,11 @@ TUTOR_MODE=socratic chainlit run app.py -w
 TUTOR_MODE=instructional chainlit run app.py -w
 ```
 
+**Exercise and tutoring mode**:
+
+```bash
+EXERCISE_NAME=t-test TUTOR_MODE=instructional chainlit run app.py -w
+```
 
 ## 📋 Overview
 
