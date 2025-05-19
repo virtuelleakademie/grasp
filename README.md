@@ -37,29 +37,40 @@ Create a `.env` file in the root directory with the following content:
 OPENAI_API_KEY=your-openai-api-key
 ```
 
-You can get your key at: https://platform.openai.com/account/api-keys
+You can get your key at: <https://platform.openai.com/account/api-keys>
 
 ---
-
 
 ## 🚀 Getting Started
 
 ### Running the Tutor
 
-To start the GRASP tutoring system:
+To start the GRASP tutoring system with the default exercise:
 
 ```bash
-# Start with the default exercise
 chainlit run app.py -w
+```
 
-# Specify a custom exercise
+You can specify a custom exercise or a tutoring mode.
+
+**Exercise**:
+
+```bash
 EXERCISE_NAME=t-test chainlit run app.py -w
+````
 
-# Specify a tutoring mode
+**Socratic tutoring mode**:
+
+```bash
 TUTOR_MODE=socratic chainlit run app.py -w
-or
+```
+
+**Instructional tutor**:
+
+```bash
 TUTOR_MODE=instructional chainlit run app.py -w
 ```
+
 
 ## 📋 Overview
 
@@ -161,16 +172,19 @@ The system uses a `Message` class to format and send content to the user:
 Three main reasoning components evaluate and respond to student input:
 
 1. **TutorCheckUnderstanding**: Evaluates if the student has answered the questions
+
    ```python
    understanding = await check_understanding(user_input)
    ```
 
 2. **TutorFeedback**: Provides constructive feedback on responses
+
    ```python
    feedback = await generate_feedback(user_input)
    ```
 
 3. **TutorInstructions**: Generates questions or hints to guide learning
+
    ```python
    instructions = await generate_instructions(user_input)
    ```
