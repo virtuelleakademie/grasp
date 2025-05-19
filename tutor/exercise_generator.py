@@ -28,7 +28,7 @@ class ExerciseGenerator:
         )
     """
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4o"):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4.1"):
         """
         Initialize the exercise generator.
 
@@ -146,7 +146,7 @@ def save_exercise(exercise, base_filename=None, formats=None, exercise_dir=None)
     # Set defaults
     base_filename = base_filename or "generated_exercise"
     formats = formats or ["json"]
-    exercise_dir = exercise_dir or "exercises/generated-exercises"
+    exercise_dir = exercise_dir or "examples/generated-exercises"
 
     # Ensure directory exists
     os.makedirs(exercise_dir, exist_ok=True)

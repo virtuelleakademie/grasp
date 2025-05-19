@@ -18,28 +18,30 @@ VALID_MODES = ['socratic', 'instructional']
 
 print(f"Starting tutor agent application.")
 
-# Set default directory and exercise file
-DEFAULT_EXERCISE_DIR = "exercises"
-DEFAULT_EXERCISE_FILE = "t-test.yaml"
+# Set default directory and exercise name
+DEFAULT_EXERCISES_DIR = "exercises"
+DEFAULT_EXERCISE_NAME = "t-test"  # Just the directory name, not the filename
 
 # Check for environment variable, otherwise use default
-exercise_path = os.getenv("EXERCISE_PATH")
-if not exercise_path:
-    # If no EXERCISE_PATH is specified, use the default directory and file
-    exercise_path = os.path.join(DEFAULT_EXERCISE_DIR, DEFAULT_EXERCISE_FILE)
-    print(f"No EXERCISE_PATH specified. Using default: {exercise_path}")
-else:
-    print(f"Using exercise path from environment: {exercise_path}")
+exercise_name = os.getenv("EXERCISE_NAME", DEFAULT_EXERCISE_NAME)
+exercises_dir = os.getenv("EXERCISES_DIR", DEFAULT_EXERCISES_DIR)
 
-# Create exercises directory if it doesn't exist (only needed if using default)
-if not os.getenv("EXERCISE_PATH"):
-    os.makedirs(DEFAULT_EXERCISE_DIR, exist_ok=True)
+# Construct the full path to exercise.yaml inside the specified bundle
+exercise_path = os.path.join(exercises_dir, exercise_name, "exercise.yaml")
+print(f"Using exercise: {exercise_path}")
+
+# Create exercises directory if it doesn't exist
+os.makedirs(exercises_dir, exist_ok=True)
+# Create exercise bundle directory if it doesn't exist
+os.makedirs(os.path.join(exercises_dir, exercise_name), exist_ok=True)
+
 
 exercise = None
 try:
     # Attempt to load the exercise file
     exercise = ExerciseLoader.load(exercise_path)
     print(f"Loaded exercise: {exercise.metadata.title}")
+
 except FileNotFoundError as e:
     print(f"Exercise file not found: {exercise_path}")
     print("Falling back to direct imports from exercises.py")
