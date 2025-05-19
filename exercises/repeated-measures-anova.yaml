@@ -28,21 +28,21 @@ end_message: >
   abgeschlossen. Du verstehst jetzt, wie diese Methode eingesetzt wird, um
   Veränderungen innerhalb derselben Personen über verschiedene Bedingungen zu
   analysieren. Dieses Wissen ist in vielen Bereichen der experimentellen
-  Forschung von großem Wert!
+  Forschung von grossem Wert!
 
 checkpoints:
   - checkpoint_number: 1
     main_question: >
       Dieses Bild zeigt die Reaktionszeiten derselben Teilnehmer unter drei
-      verschiedenen Schlafbedingungen: ausreichend (8 Stunden), mäßig (6
+      verschiedenen Schlafbedingungen: ausreichend (8 Stunden), mässig (6
       Stunden) und wenig (4 Stunden) Schlaf. Klicke einmal darauf, um die
       Details zu sehen. Diesen Daten nach zu urteilen: Hat die Schlafdauer einen
       signifikanten Einfluss auf die Reaktionszeit?
     main_answer: >
       Beobachtungen: - Die mittlere Reaktionszeit steigt mit abnehmender
-      Schlafdauer an. - Die Varianz zwischen den Bedingungen ist größer als die
+      Schlafdauer an. - Die Varianz zwischen den Bedingungen ist grösser als die
       Fehlervarianz innerhalb der Bedingungen. - Der resultierende F-Wert ist
-      größer als der kritische Wert.
+      grösser als der kritische Wert.
 
       Schlussfolgerung: Die systematische Zunahme der Reaktionszeit und der
       überkritische F-Wert weisen darauf hin, **dass die Schlafdauer einen
@@ -109,7 +109,7 @@ checkpoints:
 
       **Schlussfolgerung: Erst bei einer Reduktion auf 4 Stunden Schlaf tritt
       eine statistisch signifikante Verschlechterung der Reaktionszeit ein im
-      Vergleich zu ausreichendem (8 Stunden) und mäßigem (6 Stunden) Schlaf.**
+      Vergleich zu ausreichendem (8 Stunden) und mässigem (6 Stunden) Schlaf.**
     image_solution: "static/Question_2_Step_0.png"
     steps:
       - step_number: 1

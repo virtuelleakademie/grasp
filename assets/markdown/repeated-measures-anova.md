@@ -9,14 +9,14 @@ Diese Übung behandelt die einfaktorielle ANOVA mit Messwiederholung anhand eine
 - Verständnis des Designs mit abhängigen Stichproben
 - Zerlegung der Gesamtvarianz in Bedingungs-, Personen- und Residualvarianz
 - Durchführung eines Signifikanztests (F-Test)
-- Berechnung und Interpretation von Effektgrößen
+- Berechnung und Interpretation von Effektgrössen
 - Durchführung eines Kontrasttests zur Überprüfung spezifischer Hypothesen (z. B. quadratischer Trend)
 
 ---
 
 ## Datengrundlage
 
-Die Arbeitszufriedenheit von **5 Personen** wurde zu drei Zeitpunkten erhoben:  
+Die Arbeitszufriedenheit von **5 Personen** wurde zu drei Zeitpunkten erhoben:
 **Anfang**, **nach 3 Monaten**, **nach 6 Monaten**.
 
 | Vpn | Anfang | 3 Monate | 6 Monate |
@@ -33,8 +33,8 @@ Die Arbeitszufriedenheit von **5 Personen** wurde zu drei Zeitpunkten erhoben:
 
 **a)** Formuliere die **Nullhypothese (H₀)** und die **Alternativhypothese (H₁)**.
 
-- H₀:  
-- H₁:  
+- H₀:
+- H₁:
 
 ---
 
@@ -72,14 +72,14 @@ Vergleiche mit dem kritischen F-Wert bei df1 = 2 und df2 = 8.
 
 ---
 
-## Aufgabe 5: Effektgrößen
+## Aufgabe 5: Effektgrössen
 
 Berechne:
 
-- **Nicht-partieller Determinationskoeffizient (η²):**  
+- **Nicht-partieller Determinationskoeffizient (η²):**
   \( \eta^2 = \frac{QS_{zwA}}{QS_{tot}} \)
 
-- **Partieller Determinationskoeffizient (η²_p):**  
+- **Partieller Determinationskoeffizient (η²_p):**
   \( \eta^2_p = \frac{QS_{zwA}}{QS_{zwA} + QS_{Res}} \)
 
 ---
@@ -121,7 +121,6 @@ summary(model)
 
 ## Quellen
 
-- Mayer, B. (2025). Übungen zu Statistik II. FS 2025. Universität Bern.  
-- Eid et al. (2020). Statistik und Forschungsmethoden.  
+- Mayer, B. (2025). Übungen zu Statistik II. FS 2025. Universität Bern.
+- Eid et al. (2020). Statistik und Forschungsmethoden.
 - Budischewski & Günther (2020). Aufgabenbuch Statistik.
-
