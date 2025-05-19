@@ -1,7 +1,6 @@
 # GRASP - Guided Reasoning Assistant for Statistics Practice
 
-Welcome to GRASP, a framework for structured statistics tutoring exercises. This document explains how exercises are formatted, loaded, and used in the tutoring system.
-
+Welcome to GRASP, a framework for structured statistics tutoring exercises powered by AI. This document explains how to install, use, and extend the tutoring system, as well as how to create and manage exercises.
 
 ## 🔧 Installation
 
@@ -15,8 +14,13 @@ cd grasp
 ### 2. Create and activate a virtual environment
 
 ```bash
-python -m venv venv
-source venv/bin/activate
+# For Unix/macOS
+python -m venv .venv
+source .venv/bin/activate
+
+# For Windows
+python -m venv .venv
+.venv\Scripts\activate
 ```
 
 ### 3. Install dependencies
@@ -27,7 +31,7 @@ pip install -r requirements.txt
 
 ### 4. Add your OpenAI API key
 
-Create a `.env` file in the root of your project with the following content:
+Create a `.env` file in the root directory with the following content:
 
 ```env
 OPENAI_API_KEY=your-openai-api-key
@@ -38,7 +42,26 @@ You can get your key at: https://platform.openai.com/account/api-keys
 ---
 
 
-## Overview
+## 🚀 Getting Started
+
+### Running the Tutor
+
+To start the GRASP tutoring system:
+
+```bash
+# Start with the default exercise
+chainlit run app.py -w
+
+# Specify a custom exercise
+EXERCISE_NAME=t-test chainlit run app.py -w
+
+# Specify a tutoring mode
+TUTOR_MODE=socratic chainlit run app.py -w
+or
+TUTOR_MODE=instructional chainlit run app.py -w
+```
+
+## 📋 Overview
 
 GRASP combines a structured exercise format with an intelligent tutoring system to provide guided learning experiences for statistics concepts. The system supports:
 
@@ -47,8 +70,9 @@ GRASP combines a structured exercise format with an intelligent tutoring system 
 - Guided questioning with feedback
 - Rich content with Markdown and LaTeX math
 - Optional image support
+- Exercise generation with LLMs
 
-## Exercise Format
+## 📝 Exercise Format
 
 Each GRASP exercise consists of:
 
@@ -74,6 +98,8 @@ metadata:
   language: "en"
   author: "John Doe"
   tags: ["ANOVA", "F-Test", "Statistics"]
+  version: "1.0"
+  date_created: "2023-10-15"
 
 first_message: "Today we'll explore Analysis of Variance (ANOVA)..."
 
@@ -91,22 +117,26 @@ checkpoints:
         image: "static/step1_image.png"
 ```
 
-## Tutoring System
+## 🧠 Tutoring System
 
-The GRASP tutoring system guides students through exercises with a combination of AI components:
+GRASP's intelligent tutoring system guides students through exercises using a combination of AI components:
 
 ### Tutor Modes
 
-The system supports different tutoring approaches:
+The system supports different tutoring approaches that adapt to student needs:
 
-1. **Socratic Mode**: Asks questions to guide the student toward understanding, without directly providing answers.
-2. **Instructional Mode**: Provides explanations of concepts using technical terms, then helps the student apply them.
+1. **Socratic Mode**: Asks questions to guide the student toward understanding, without directly providing answers. This mode encourages critical thinking and self-discovery.
 
-The mode can be specified in environment variables or randomly assigned:
+2. **Instructional Mode**: Provides detailed explanations of concepts using technical terms, then helps the student apply them. This mode is more directive and educational.
 
-```python
-mode = os.getenv("TUTOR_MODE")  # Set in .env file or randomize if None
-```
+The mode can be specified in multiple ways:
+
+- Environment variable: `TUTOR_MODE=socratic chainlit run app.py`
+- URL query parameter: `http://localhost:8000/?mode=instructional`
+- HTTP header: `X-Tutor-Mode: socratic`
+- User metadata (when integrated with authentication)
+
+If not specified, the system will randomly select a mode for each session.
 
 ### Key Components
 
@@ -122,8 +152,8 @@ The `Iterations` class manages progression through an exercise:
 
 The system uses a `Message` class to format and send content to the user:
 
-- Supports text messages with markdown and LaTeX
-- Handles image attachments
+- Supports rich text with Markdown and LaTeX math
+- Handles image attachments with automatic rendering
 - Provides concatenation operations for building complex messages
 
 #### Reasoning Components
@@ -145,7 +175,27 @@ Three main reasoning components evaluate and respond to student input:
    instructions = await generate_instructions(user_input)
    ```
 
-## Loading and Generating Exercises
+## 📚 Working with Exercises
+
+### Organizing Exercises
+
+Exercises are organized into directories following this structure:
+
+```
+exercises/
+├── t-test/                   # Exercise identifier/name
+│   ├── exercise.yaml         # Main exercise definition
+│   ├── figures/               # Optional directory for images
+│   │   ├── step1.png
+│   │   └── solution.png
+│   └── resources/            # Optional additional resources
+├── anova/
+│   ├── exercise.yaml
+│   └── ...
+└── linear-regression/
+    ├── exercise.json         # Can be JSON instead of YAML
+    └── ...
+```
 
 ### Loading Existing Exercises
 
@@ -155,35 +205,39 @@ Exercises are loaded from YAML or JSON files using the `ExerciseLoader`:
 from grasp.tutor.exercise_loader import ExerciseLoader
 
 # Load from a file (detects format from extension)
-exercise = ExerciseLoader.load("path/to/exercise.yaml")
+exercise = ExerciseLoader.load("exercises/t-test/exercise.yaml")
 
 # Explicitly load from specific format
-exercise = ExerciseLoader.from_yaml("path/to/exercise.yaml")
-exercise = ExerciseLoader.from_json("path/to/exercise.json")
+exercise = ExerciseLoader.from_yaml("exercises/t-test/exercise.yaml")
+exercise = ExerciseLoader.from_json("exercises/linear-regression/exercise.json")
 
 # Load from a dictionary
 data = {...}  # Dictionary matching Exercise structure
 exercise = ExerciseLoader.from_dict(data)
 ```
 
-The app automatically looks for exercises in the specified path or falls back to a default:
+The app automatically looks for exercises based on environment variables:
 
 ```python
-default_exercise = "grasp/exercises/anova.yaml"
-exercise_path = os.getenv("EXERCISE_PATH", default_exercise)
+# Default exercise directory and name
+EXERCISES_DIR = "exercises"
+EXERCISE_NAME = "t-test"
+
+# Override with environment variables
+EXERCISE_NAME=anova EXERCISES_DIR=custom_exercises python -m chainlit run app.py
 ```
 
 ### Generating New Exercises
 
-The `ExerciseGenerator` module automates the creation of new exercises:
+The `ExerciseGenerator` module automates the creation of new exercises using OpenAI's GPT models:
 
 ```python
 from grasp.tutor.exercise_generator import ExerciseGenerator
 
 # Initialize with optional custom settings
-generator = ExerciseGenerator(model="gpt-4o")
+generator = ExerciseGenerator(model="gpt-4.1")
 
-# Generate an exercise
+# Generate a basic exercise
 exercise = generator.generate(
     "Create a beginner ANOVA exercise that explains F-tests"
 )
@@ -193,47 +247,30 @@ exercise = generator.generate(
     "Create an exercise on statistical power analysis",
     markdown_file="resources/statistics/power_analysis.md"
 )
+
+# Save the generated exercise
+from grasp.tutor.exercise_generator import save_exercise
+save_exercise(exercise, base_filename="anova_f_test", formats=["json", "yaml"])
 ```
 
-See the `grasp/tutor/README_exercise_generator.md` for complete documentation.
+### Command-Line Exercise Generation
 
-## Generating Exercises
-
-GRASP provides an `ExerciseGenerator` module that simplifies the creation of exercises using OpenAI's structured output:
-
-```python
-from grasp.tutor.exercise_generator import generate_exercise
-
-# Generate a simple exercise
-exercise = generate_exercise(
-    "Generate an ANOVA exercise for beginners in statistics."
-)
-
-# With markdown content as reference
-exercise = generate_exercise(
-    "Generate an exercise based on this content",
-    markdown_file="resources/statistics/anova_concepts.md"
-)
-
-# Save to file
-import json
-with open("generated_exercise.json", "w") as f:
-    json.dump(exercise.model_dump(), f, indent=2)
-```
-
-The generator also supports command-line usage:
+GRASP provides a convenient command-line interface for generating exercises:
 
 ```bash
 # Basic usage
-python -m grasp.tutor.exercise_generator "Generate an ANOVA exercise" --output exercise.json
+python -m grasp.tutor.exercise_generator "Generate an ANOVA exercise" --output anova_exercise
 
-# With markdown reference
-python -m grasp.tutor.exercise_generator "Generate an exercise" --markdown resources/anova.md
+# With markdown reference material
+python -m grasp.tutor.exercise_generator "Generate an exercise" --markdown resources/statistics/anova.md --output anova_exercise
+
+# Specify output formats and directory
+python -m grasp.tutor.exercise_generator "Generate a t-test exercise" --formats json yaml --output-dir exercises/t-test
 ```
 
-### Using Directly with LLMs
+### Using Directly with OpenAI API
 
-The exercise format can also be used directly with LLM structured output:
+The exercise format can also be used directly with the OpenAI API:
 
 ```python
 from openai import OpenAI
@@ -241,50 +278,56 @@ from grasp.tutor.exercise_model import Exercise
 
 client = OpenAI()
 
-response = client.beta.chat.completions.parse(
-    model="gpt-4o",
-    messages=[{"role": "user", "content": "Generate an ANOVA exercise..." }],
-    response_format={"type": "pydantic_model", "schema": Exercise.model_json_schema()}
+response = client.responses.parse(
+    model="gpt-4.1-mini",
+    input=[
+        {"role": "user", "content": "Generate an ANOVA exercise..." }
+    ],
+    text_format=Exercise
 )
 
-exercise = response.choices[0].message.parsed
+exercise = response.output_parsed
 ```
 
-## Tutor Interaction Flow
+## 🔄 Interaction Flow
 
-The tutoring process follows this general flow:
+The GRASP tutoring process follows this general flow:
 
-1. The system presents the first message and main question
-2. For each checkpoint:
+1. **Introduction**: The system presents the first message introducing the topic
+2. **Main Question**: The first checkpoint's main question is presented
+3. **Guided Learning**: For each checkpoint:
    - The system presents guiding questions one by one
    - For each guiding question:
-     - The system checks the student's understanding
-     - Provides feedback on their answers
-     - Gives instructions or hints to improve understanding
+     - The system evaluates the student's understanding of the concept
+     - Provides adaptive feedback on their answers
+     - Gives further instructions or hints based on their progress
    - Once all guiding questions are answered, the system presents the main question again
-3. After all checkpoints are completed, the system shows the end message
+4. **Progression**: After completing a checkpoint, the system proceeds to the next checkpoint
+5. **Conclusion**: After all checkpoints are completed, the system shows the end message
 
-## Content Guidelines
+## 📋 Content Guidelines
 
 When creating exercises:
 
-- All text supports **Markdown and LaTeX** (using `$...$` for math)
+- All text supports **Markdown formatting and LaTeX** (using `$...$` for inline math and `$$...$$` for display math)
 - Steps must be **sequentially numbered** (starting from 1)
+- Checkpoints must be **sequentially numbered** (starting from 1)
 - Images are **optional**, specified via relative path or URL
 - Each checkpoint should have **at least one guiding step**
-- Include a complete metadata block in all files
+- Include a complete metadata block with all required fields
+- Use clear, concise language appropriate for the specified difficulty level
 
-## Key Features
+## 🌟 Key Features
 
-- YAML & JSON supported for input/output
-- Human and AI authoring capabilities
-- Automated exercise generation with OpenAI
-- Reference material integration from Markdown files
-- Rich content with Markdown and LaTeX math
-- Optional image support
-- Extensible metadata
-- Strong validation via Pydantic
+- **Multiple Formats**: YAML & JSON supported for exercise definition
+- **Flexible Authoring**: Both human and AI authoring capabilities
+- **AI Generation**: Automated exercise creation with OpenAI models
+- **Reference Integration**: Incorporate existing material from Markdown files
+- **Rich Content**: Full support for Markdown and LaTeX mathematical notation
+- **Visual Support**: Optional image inclusion for each step and solution
+- **Extensible Metadata**: Customizable properties for categorization and filtering
+- **Strong Validation**: Type checking and validation via Pydantic
+- **Multiple Tutoring Styles**: Socratic and instructional approaches
 
 For complete details on the exercise format, see `grasp/docs/specifications/exercise_requirements.md`.
-For documentation on exercise generation, see `grasp/docs/README_exercise_generator.md`.
-
+For comprehensive documentation on exercise generation, see `grasp/docs/README_exercise_generator.md`.
