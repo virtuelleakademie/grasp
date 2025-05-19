@@ -51,7 +51,7 @@ except Exception as e:
 async def start():
     # Initialize with None
     tutor_mode = None
-    user_id = "anonymous"
+    user_id = "anonymous@bfh.ch"
 
     # STEP 1: Get user information from user session (according to Chainlit docs)
     app_user = cl.user_session.get("user")
