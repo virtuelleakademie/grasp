@@ -37,6 +37,7 @@ logs/tutor/johndoe*
 logs/tutor/anonymous*
 .files/*
 examples/test-*
+examples/generated-exercises/*
 
 # Files
 assets/pdfs/*
