@@ -17,7 +17,21 @@ show_reasoning = False  # Set to True to see the reasoning of the agent
 
 VALID_MODES = ['socratic', 'instructional']
 
-print(f"Starting tutor agent application.")
+mode = os.getenv("TUTOR_MODE") ## set in .env file. set to None to randomize mode
+if mode:
+    mode = mode.lower()
+    if mode not in VALID_MODES:
+        raise SystemExit(
+            f"Error: Invalid tutor mode '{mode}'. Valid modes are: {', '.join(VALID_MODES)}"
+        )
+else:
+    mode = random.choice(VALID_MODES)
+
+
+#mode = VALID_MODES[0]  # force socratic
+#mode = VALID_MODES[1]  # force instructional
+
+print(f"Starting tutor agent in {mode} mode.")
 
 # Load the exercise file - can be specified through environment variable or use default
 default_exercise = "grasp/exercises/anova.yaml"
@@ -40,31 +54,10 @@ except Exception as e:
 
 @cl.on_chat_start
 async def start():
-    # Get tutor mode from request parameters or use random if not provided
-    tutor_mode = cl.user_session.get("tutor_mode")
-    if not tutor_mode:
-        # Try to get from query parameters
-        query_params = cl.context.get("query_params", {})
-        tutor_mode = query_params.get("mode", "").lower() if "mode" in query_params else None
-        
-        # Validate the mode
-        if tutor_mode and tutor_mode not in VALID_MODES:
-            print(f"Warning: Invalid tutor mode '{tutor_mode}' requested. Defaulting to random mode.")
-            tutor_mode = None
-            
-        # If still no valid mode, choose randomly
-        if not tutor_mode:
-            tutor_mode = random.choice(VALID_MODES)
-    
-    # Get user identifier from request parameters or use default
-    user_id = cl.context.get("user_id", "anonymous")
-    
-    print(f"User {user_id} starting session with tutor mode: {tutor_mode}")
-    
     cl.user_session.set("agent_state", {
         "messages": [],
-        "log": LogContainer(tutor_mode=tutor_mode, user=user_id),
-        "tutor_mode": tutor_mode,
+        "log": LogContainer(tutor_mode=mode, user="johndoe@bfh.ch"),
+        "tutor_mode": mode,
         "current_checkpoint": 0,
         "current_step": 0,
         "iterations": Iterations(exercise) if exercise else Iterations(),  # Pass the exercise if loaded
