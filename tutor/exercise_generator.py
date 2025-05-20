@@ -34,7 +34,7 @@ class ExerciseGenerator:
 
         Args:
             api_key: OpenAI API key. If None, uses OPENAI_API_KEY environment variable
-            model: OpenAI model to use (default: "gpt-4o")
+            model: OpenAI model to use (default: "gpt-4.1")
         """
         # Load environment variables from .env file
         load_dotenv()
@@ -106,7 +106,7 @@ def generate_exercise(
     Args:
         prompt: The instruction for generating the exercise
         markdown_file: Optional path to a markdown file with additional content
-        model: OpenAI model to use (default: "gpt-4o")
+        model: OpenAI model to use (default: "gpt-4.1")
         api_key: OpenAI API key. If None, uses OPENAI_API_KEY environment variable
 
     Returns:
