@@ -59,7 +59,7 @@ from grasp.tutor.exercise_generator import ExerciseGenerator
 
 # Create a generator with custom settings
 # Environment variables will be loaded automatically
-generator = ExerciseGenerator(model="gpt-4o")
+generator = ExerciseGenerator(model="gpt-4.1")
 
 # Generate multiple exercises
 exercise1 = generator.generate("Create a beginner ANOVA exercise in English")
@@ -76,7 +76,7 @@ python -m grasp.tutor.exercise_generator "Generate an ANOVA exercise for statist
 python -m grasp.tutor.exercise_generator "Generate an exercise based on this content" --markdown resources/anova.md --output exercise.yaml
 
 # Specify model
-python -m grasp.tutor.exercise_generator "Generate a regression exercise" --model gpt-4o --output exercise.json
+python -m grasp.tutor.exercise_generator "Generate a regression exercise" --model gpt-4.1 --output exercise.json
 ```
 
 ## Integration with Exercise Loader
@@ -111,9 +111,9 @@ The module uses `python-dotenv` to automatically load environment variables from
 
 ```python
 def generate_exercise(
-    prompt: str, 
+    prompt: str,
     markdown_file: Optional[str] = None,
-    model: str = "gpt-4o",
+    model: str = "gpt-4.1",
     api_key: Optional[str] = None
 ) -> Exercise
 ```
@@ -124,7 +124,7 @@ A simplified function to generate exercises without instantiating the ExerciseGe
 
 ```python
 class ExerciseGenerator:
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4o")
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4.1")
     def generate(self, prompt: str, markdown_file: Optional[str] = None) -> Exercise
 ```
 

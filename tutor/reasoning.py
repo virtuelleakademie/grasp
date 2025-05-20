@@ -28,7 +28,7 @@ instructional
 
 
 @with_agent_state
-def llm_structured(messages, models=["gpt-4o-mini", "gpt-4o", "o3-mini"], temperature=0.5, top_p=0.5, response_format=None, state=None):
+def llm_structured(messages, models=["gpt-4.1-mini", "gpt-4.1", "o3-mini"], temperature=0.5, top_p=0.5, response_format=None, state=None):
     """
     Create a new instance of the OpenAI model with the specified parameters.
     """

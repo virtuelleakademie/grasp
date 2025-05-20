@@ -125,7 +125,7 @@ from models import Exercise
 client = OpenAI()
 
 response = client.responses.parse(
-    model="gpt-4o",
+    model="gpt-4.1",
     input=[{"role": "user", "content": "Generate an ANOVA exercise..." }],
     text_format=Exercise
 )

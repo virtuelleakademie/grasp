@@ -197,7 +197,7 @@ if __name__ == "__main__":
     parser.add_argument("prompt", help="Prompt for generating the exercise")
     parser.add_argument("--markdown", "-m", help="Path to markdown file with additional content")
     parser.add_argument("--output", "-o", help="Output file path (without extension)")
-    parser.add_argument("--model", default="gpt-4o", help="OpenAI model to use (default: gpt-4o)")
+    parser.add_argument("--model", default="gpt-4.1", help="OpenAI model to use (default: gpt-4.1)")
     parser.add_argument("--formats", "-f", nargs="+", choices=["json", "yaml"],
                         default=["json"], help="Output formats (default: json)")
     parser.add_argument("--output-dir", "-d", default="exercises/generated-exercises",
