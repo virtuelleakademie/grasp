@@ -210,7 +210,7 @@ class Iterations:
             if state["debugging"]:
                 print(f"System: Loading guiding question for Checkpoint {self.current_checkpoint} and Step {self.current_step}.")
             message.image = self.image()
-            message += f"\n\nLass uns {"zuerst" if self.current_step == 1 else "jetzt"} über diese Frage nachdenken:\n"
+            message += f"\n\nLass uns {'zuerst' if self.current_step == 1 else 'jetzt'} über diese Frage nachdenken:\n"
             message += self.guiding_question()
         else:
             if state["debugging"]:
