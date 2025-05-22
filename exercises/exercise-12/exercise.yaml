@@ -5,7 +5,7 @@ metadata:
   topic: Messwiederholungs-ANOVA
   level: Bachelor
   language: de
-  author: Andrew Elli
+  author: Andrew Ellis
   tags:
     - ANOVA
     - Messwiederholung
@@ -43,7 +43,7 @@ checkpoints:
         guiding_question:
           "Was sind Bedingungseffekte und Personeneffekte? Berechnen Sie
           exemplarisch den Bedingungseffekt $t_2$ (nach 3 Monaten) und den
-          Personeneffekt $p_1$ (Person 1) anhand der folgenden Tabelle:"
+          Personeneffekt $p_1$ (Person 1) anhand der Tabelle."
         guiding_answer: 'Bedingungseffekte ($t_j$) sind die Abweichungen der
           Mittelwerte der Bedingungen vom Gesamtmittelwert. Personeneffekte
           ($p_m$) sind die Abweichungen der Personenmittelwerte vom
@@ -64,7 +64,7 @@ checkpoints:
           - $t_2 = \bar{x}_{\bullet 2} - \bar{x} = 5 - 7 = -2$
 
           - $p_1 = \bar{x}_{1\bullet} - \bar{x} = 6 - 7 = -1$'
-        image: null
+        image: "figures/fig-1.png"
       - step_number: 2
         guiding_question:
           "Was repräsentiert die Residualvariation $QS_{Res}$ in der
@@ -76,7 +76,7 @@ checkpoints:
           Personenunterschiede noch durch die Haupteffekte der Bedingungen
           erklärt werden und dient als Fehlerterm für den
           F-Test.\n\nFormel:\n$$QS_{Res} = QS_{tot} - QS_{zwP} - QS_{zwA}$$"
-        image: null
+        image: "figures/fig-1.png"
   - checkpoint_number: 2
     main_question:
       "Wie unterscheiden sich nicht-partielle und partielle Effektgrössen bei der
@@ -103,7 +103,7 @@ checkpoints:
           \\frac{40}{94} \\approx 0{,}426$$\n\n Die partielle Effektgrösse ist
           grösser, da sie die Varianz durch stabile Personenunterschiede
           bereinigt."
-        image: null
+        image: "figures/fig-2.png"
       - step_number: 2
         guiding_question:
           "Welche Effektgrösse ist bei Messwiederholungsdesigns aussagekräftiger
@@ -116,7 +116,7 @@ checkpoints:
           nach Cohen (1988):\n- $0{,}01$: kleiner Effekt\n- $0{,}06$: mittlerer
           Effekt\n- $0{,}14$: grosser Effekt\n\nUnser Wert $0{,}426$ entspricht
           einem sehr grossen Effekt."
-        image: null
+        image: "figures/fig-2.png"
   - checkpoint_number: 3
     main_question:
       "Was ist Sphärizität, wie wird sie getestet, und wie korrigiert man bei
@@ -139,7 +139,7 @@ checkpoints:
           Sphärizitätsannahme **nicht verletzt**. Das bedeutet, die Varianzen
           der Differenzen sind annähernd gleich, und eine Korrektur ist
           statistisch nicht zwingend erforderlich."
-        image: null
+        image: n"figures/fig-3.png"
       - step_number: 2
         guiding_question:
           "Die ursprünglichen Freiheitsgrade sind $df_{zwA} = 2$ und $df_{Res} =
@@ -150,7 +150,7 @@ checkpoints:
           $df_{zwA}^{korr} = 2 \\times 0{,}76176 = 1{,}524$\n- Nenner:
           $df_{Res}^{korr} = 8 \\times 0{,}76176 = 6{,}094$\n\nDiese Korrektur
           führt zu einem konservativeren Test mit höheren kritischen F-Werten."
-        image: null
+        image: "figures/fig-3.png"
       - step_number: 3
         guiding_question:
           Wann sollte die Greenhouse-Geisser- und wann die Huynh-Feldt-Korrektur
@@ -162,4 +162,4 @@ checkpoints:
           konservativ)\n\nIn unserem Fall mit $\\hat{\\epsilon}_{GG} =
           0{,}76176$ ist die Huynh-Feldt-Korrektur angemessen.\n \nR zeigt beide
           Korrekturen standardmässig an, unabhängig vom Mauchly-Test-Ergebnis."
-        image: null
+        image: "figures/fig-3.png"
