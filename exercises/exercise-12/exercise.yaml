@@ -113,7 +113,7 @@ checkpoints:
           "Die partielle Effektgrösse $\\hat{\\eta}^2_p$ ist aussagekräftiger, da
           sie zeigt, wie viel Varianz durch den Faktor erklärt wird, nachdem
           stabile Personenunterschiede kontrolliert wurden.\n\nInterpretation
-          nach Cohen (1988):\n- $0{,}01$: kleiner Effekt\n- $0{,}06$: mittlerer
+          nach Cohen:\n- $0{,}01$: kleiner Effekt\n- $0{,}06$: mittlerer
           Effekt\n- $0{,}14$: grosser Effekt\n\nUnser Wert $0{,}426$ entspricht
           einem sehr grossen Effekt."
         image: "figures/fig-2.png"
@@ -139,7 +139,7 @@ checkpoints:
           Sphärizitätsannahme **nicht verletzt**. Das bedeutet, die Varianzen
           der Differenzen sind annähernd gleich, und eine Korrektur ist
           statistisch nicht zwingend erforderlich."
-        image: n"figures/fig-3.png"
+        image: "figures/fig-3.png"
       - step_number: 2
         guiding_question:
           "Die ursprünglichen Freiheitsgrade sind $df_{zwA} = 2$ und $df_{Res} =
