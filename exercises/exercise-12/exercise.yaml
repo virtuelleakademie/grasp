@@ -108,7 +108,7 @@ checkpoints:
         guiding_question:
           "Welche Effektgrösse ist bei Messwiederholungsdesigns aussagekräftiger
           und warum? Wie interpretiert man den Wert $\\hat{\\eta}^2_p = 0{,}426$
-          nach Cohen (1988)?"
+          nach Cohen?"
         guiding_answer:
           "Die partielle Effektgrösse $\\hat{\\eta}^2_p$ ist aussagekräftiger, da
           sie zeigt, wie viel Varianz durch den Faktor erklärt wird, nachdem
