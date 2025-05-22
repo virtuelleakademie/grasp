@@ -26,7 +26,7 @@ def main():
     # Generate a simple ANOVA exercise
     prompt = """
     Generate a repeated-measures ANOVA exercise for beginners
-    in statistics. Include clear explanations and guided steps.
+    in statistics. Include clear explanations, guided steps and figures.
     """
 
     # Specify a markdown file with additional content
