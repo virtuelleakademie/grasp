@@ -1,8 +1,8 @@
 {
-  "bundle_id": "einfuhrung-in-t-test",
+  "bundle_id": "messwiederholung-anova",
   "version": "1.0.0",
-  "created_at": "2025-05-19T00:00:00Z",
-  "updated_at": "2025-05-20T14:30:00Z",
+  "created_at": "2025-05-22T14:30:00Z",
+  "updated_at": "2025-05-22T14:30:00Z",
 
   "exercise": {
     "file": "exercise.yaml",
@@ -10,55 +10,8 @@
   },
 
   "extended_metadata": {
-    "description": "Eine Übung zur Einführung in die verschiedenen Arten von t-Tests...",
+    "description": "Eine Übung zur Einführung in Messwiederholungs-ANOVA.",
     "estimated_time_minutes": 10
-  },
-
-  "content_inventory": {
-    "images": [
-      {
-        "file": "figures/Question_1_summary.png",
-        "description": "Vergleich der Angstsymptomwerte zwischen neuer Therapiemethode und Standardtherapie",
-        "used_in": ["checkpoint_1", "main_solution"]
-      },
-      {
-        "file": "figures/Question_1_Step_0.png",
-        "description": "Illustration zum Unterschied zwischen unabhängigem und gepaarten t-Test",
-        "used_in": ["checkpoint_1", "step_1"]
-      },
-      {
-        "file": "figures/Question_1_Step_1.png",
-        "description": "Visualisierung der Voraussetzungen für einen t-Test",
-        "used_in": ["checkpoint_1", "step_2"]
-      },
-      {
-        "file": "figures/Question_1_Step_2.png",
-        "description": "Interpretation eines signifikanten t-Tests",
-        "used_in": ["checkpoint_1", "step_3"]
-      },
-      {
-        "file": "figures/Question_2_Step_0.png",
-        "description": "Ergebnisse eines gepaarten t-Tests zur Therapiewirksamkeit",
-        "used_in": ["checkpoint_2", "main_solution"]
-      },
-      {
-        "file": "figures/Question_2_Step_1.png",
-        "description": "Erklärung des Ein-Stichproben-t-Tests",
-        "used_in": ["checkpoint_2", "step_1"]
-      },
-      {
-        "file": "figures/Question_2_Step_2.png",
-        "description": "Bedeutung der Effektgröße bei der Interpretation von t-Tests",
-        "used_in": ["checkpoint_2", "step_2"]
-      }
-    ],
-    "resources": [
-      {
-        "file": "resources/t-test-data.csv",
-        "description": "Beispieldaten für t-Test Analysen mit Angstwerten vor und nach Therapie sowie Kontrollgruppe",
-        "mime_type": "text/csv"
-      }
-    ]
   },
 
   "requirements": {
