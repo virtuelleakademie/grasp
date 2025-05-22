@@ -59,7 +59,7 @@ class ExerciseGenerator:
                 model=self.model,
                 input=messages,
                 text_format=Exercise,
-                temperature=0.2
+                temperature=0.4
             )
 
             return response.output_parsed
