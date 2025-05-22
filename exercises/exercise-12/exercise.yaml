@@ -1,0 +1,165 @@
+metadata:
+  title:
+    "Einfaktorielle Varianzanalyse mit Messwiederholung: Arbeitszufriedenheit
+    von Job-Einsteigern"
+  topic: Messwiederholungs-ANOVA
+  level: Bachelor
+  language: de
+  author: Andrew Elli
+  tags:
+    - ANOVA
+    - Messwiederholung
+    - Statistik
+    - "Effektgrössen"
+    - "Sphärizität"
+  version: "1.0"
+  date_created: "2025-05-22"
+first_message:
+  "Willkommen zur interaktiven Übung zur einfaktoriellen Varianzanalyse mit
+  Messwiederholung! Wir untersuchen gemeinsam eine Studie zur
+  Arbeitszufriedenheit von Job-Einsteigern über drei Zeitpunkte. Schritt für
+  Schritt lernen Sie, wie man die Daten analysiert, interpretiert und wichtige
+  statistische Konzepte versteht. Los geht's!"
+end_message:
+  "Herzlichen Glückwunsch! Sie haben nun die Grundlagen der einfaktoriellen
+  Varianzanalyse mit Messwiederholung verstanden, inklusive Messwertzerlegung,
+  Effektgrössen und Sphärizitätsprüfung. Nutzen Sie dieses Wissen, um eigene
+  Daten sicher zu analysieren und zu interpretieren."
+checkpoints:
+  - checkpoint_number: 1
+    main_question:
+      Wie zerlegt die Messwiederholungs-ANOVA die Gesamtvariation in
+      verschiedene Komponenten, und was bedeuten Bedingungs- und
+      Personeneffekte?
+    main_answer:
+      "Die Messwiederholungs-ANOVA zerlegt jeden Messwert in den
+      Gesamtmittelwert, den Bedingungseffekt, den Personeneffekt und den
+      Residualfehler: $$x_{mj} = \\bar{x} + t_j + p_m + e_{mj}$$. Dadurch können
+      stabile individuelle Unterschiede (Personeneffekte) von den Effekten der
+      Bedingungen getrennt werden, was die statistische Power erhöht."
+    image_solution: null
+    steps:
+      - step_number: 1
+        guiding_question:
+          "Was sind Bedingungseffekte und Personeneffekte? Berechnen Sie
+          exemplarisch den Bedingungseffekt $t_2$ (nach 3 Monaten) und den
+          Personeneffekt $p_1$ (Person 1) anhand der folgenden Tabelle:"
+        guiding_answer: 'Bedingungseffekte ($t_j$) sind die Abweichungen der
+          Mittelwerte der Bedingungen vom Gesamtmittelwert. Personeneffekte
+          ($p_m$) sind die Abweichungen der Personenmittelwerte vom
+          Gesamtmittelwert.
+
+
+          Gegebene Werte:
+
+          - Gesamtmittelwert: $\bar{x} = 7$
+
+          - Bedingungsmittelwert nach 3 Monaten: $\bar{x}_{\bullet 2} = 5$
+
+          - Personenmittelwert Person 1: $\bar{x}_{1\bullet} = 6$
+
+
+          Berechnung:
+
+          - $t_2 = \bar{x}_{\bullet 2} - \bar{x} = 5 - 7 = -2$
+
+          - $p_1 = \bar{x}_{1\bullet} - \bar{x} = 6 - 7 = -1$'
+        image: null
+      - step_number: 2
+        guiding_question:
+          "Was repräsentiert die Residualvariation $QS_{Res}$ in der
+          Messwiederholungs-ANOVA?"
+        guiding_answer:
+          "Die Residualvariation $QS_{Res}$ erfasst die Interaktion zwischen
+          Person und Bedingung, also individuelle Unterschiede in der Reaktion
+          auf die verschiedenen Bedingungen. Sie kann weder durch stabile
+          Personenunterschiede noch durch die Haupteffekte der Bedingungen
+          erklärt werden und dient als Fehlerterm für den
+          F-Test.\n\nFormel:\n$$QS_{Res} = QS_{tot} - QS_{zwP} - QS_{zwA}$$"
+        image: null
+  - checkpoint_number: 2
+    main_question:
+      "Wie unterscheiden sich nicht-partielle und partielle Effektgrössen bei der
+      Messwiederholungs-ANOVA, und warum ist diese Unterscheidung wichtig?"
+    main_answer:
+      "Nicht-partielle Effektgrössen ($\\hat{\\eta}^2$) beziehen sich auf die
+      erklärte Varianz im Verhältnis zur Gesamtvarianz, während partielle
+      Effektgrössen ($\\hat{\\eta}^2_p$) die erklärte Varianz im Verhältnis zur
+      erklärten Varianz plus Fehler nach Kontrolle der Personenunterschiede
+      angeben. Die partielle Effektgrösse ist aussagekräftiger, da sie stabile
+      individuelle Unterschiede herausrechnet."
+    image_solution: null
+    steps:
+      - step_number: 1
+        guiding_question:
+          "Gegeben sind: $QS_{tot} = 154$, $QS_{zwA} = 40$, $QS_{Res} = 54$.
+          Berechnen Sie die nicht-partielle Effektgrösse $\\hat{\\eta}^2$ und die
+          partielle Effektgrösse $\\hat{\\eta}^2_p$."
+        guiding_answer:
+          "Berechnung:\n- Nicht-partielle Effektgrösse:\n  $$\\hat{\\eta}^2 =
+          \\frac{QS_{zwA}}{QS_{tot}} = \\frac{40}{154} \\approx 0{,}260$$\n-
+          Partielle Effektgrösse:\n  $$\\hat{\\eta}^2_p =
+          \\frac{QS_{zwA}}{QS_{zwA} + QS_{Res}} = \\frac{40}{40 + 54} =
+          \\frac{40}{94} \\approx 0{,}426$$\n\n Die partielle Effektgrösse ist
+          grösser, da sie die Varianz durch stabile Personenunterschiede
+          bereinigt."
+        image: null
+      - step_number: 2
+        guiding_question:
+          "Welche Effektgrösse ist bei Messwiederholungsdesigns aussagekräftiger
+          und warum? Wie interpretiert man den Wert $\\hat{\\eta}^2_p = 0{,}426$
+          nach Cohen (1988)?"
+        guiding_answer:
+          "Die partielle Effektgrösse $\\hat{\\eta}^2_p$ ist aussagekräftiger, da
+          sie zeigt, wie viel Varianz durch den Faktor erklärt wird, nachdem
+          stabile Personenunterschiede kontrolliert wurden.\n\nInterpretation
+          nach Cohen (1988):\n- $0{,}01$: kleiner Effekt\n- $0{,}06$: mittlerer
+          Effekt\n- $0{,}14$: grosser Effekt\n\nUnser Wert $0{,}426$ entspricht
+          einem sehr grossen Effekt."
+        image: null
+  - checkpoint_number: 3
+    main_question:
+      "Was ist Sphärizität, wie wird sie getestet, und wie korrigiert man bei
+      Verletzung die F-Test-Statistik?"
+    main_answer:
+      "Sphärizität bedeutet, dass die Varianzen aller Differenzvariablen (z.B.
+      $X_1 - X_2$, $X_1 - X_3$, $X_2 - X_3$) gleich sind. Sie wird mit dem
+      Mauchly-Test geprüft. Bei Verletzung der Sphärizitätsannahme werden die
+      Freiheitsgrade des F-Tests mit einem Korrekturfaktor ($\\hat{\\epsilon}$)
+      angepasst, z.B. Greenhouse-Geisser oder Huynh-Feldt, um die Teststatistik
+      zu korrigieren."
+    image_solution: null
+    steps:
+      - step_number: 1
+        guiding_question:
+          "Der Mauchly-Test zeigt einen p-Wert von $0{,}56973$. Was bedeutet das
+          für die Sphärizitätsannahme?"
+        guiding_answer:
+          "Da der p-Wert $0{,}56973$ grösser als $0{,}05$ ist, wird die
+          Sphärizitätsannahme **nicht verletzt**. Das bedeutet, die Varianzen
+          der Differenzen sind annähernd gleich, und eine Korrektur ist
+          statistisch nicht zwingend erforderlich."
+        image: null
+      - step_number: 2
+        guiding_question:
+          "Die ursprünglichen Freiheitsgrade sind $df_{zwA} = 2$ und $df_{Res} =
+          8$. Korrigieren Sie diese mit dem Greenhouse-Geisser-Korrekturfaktor
+          $\\hat{\\epsilon}_{GG} = 0{,}76176$."
+        guiding_answer:
+          "Berechnung der korrigierten Freiheitsgrade:\n- Zähler:
+          $df_{zwA}^{korr} = 2 \\times 0{,}76176 = 1{,}524$\n- Nenner:
+          $df_{Res}^{korr} = 8 \\times 0{,}76176 = 6{,}094$\n\nDiese Korrektur
+          führt zu einem konservativeren Test mit höheren kritischen F-Werten."
+        image: null
+      - step_number: 3
+        guiding_question:
+          Wann sollte die Greenhouse-Geisser- und wann die Huynh-Feldt-Korrektur
+          verwendet werden?
+        guiding_answer:
+          "Entscheidungsregel:\n- Wenn $\\hat{\\epsilon}_{GG} < 0{,}75$:
+          Greenhouse-Geisser-Korrektur (konservativer)\n- Wenn
+          $\\hat{\\epsilon}_{GG} > 0{,}75$: Huynh-Feldt-Korrektur (weniger
+          konservativ)\n\nIn unserem Fall mit $\\hat{\\epsilon}_{GG} =
+          0{,}76176$ ist die Huynh-Feldt-Korrektur angemessen.\n \nR zeigt beide
+          Korrekturen standardmässig an, unabhängig vom Mauchly-Test-Ergebnis."
+        image: null
