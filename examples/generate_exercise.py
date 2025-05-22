@@ -27,8 +27,8 @@ def main():
     prompt = """
     Generate a repeated-measures ANOVA exercise for beginners in statistics.
     Include clear explanations, guided steps and figures. When writing in German
-    use umlauts instead of the corresponding hexadecimal escape sequence (e.g.
-    Gl\xFCckwunsch -> Glückwunsch). Use 'ss' instead of 'ß'.
+    use umlauts instead of the corresponding hexadecimal escape sequence, use e.g.
+    'ü' instead of '\xFC'. Use 'ss' instead of 'ß'.
     """
 
     # Specify a markdown file with additional content
