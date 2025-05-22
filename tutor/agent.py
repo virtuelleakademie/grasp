@@ -56,23 +56,30 @@ class Message:
         
         # Create a more unique name for the image with timestamp to avoid caching issues
         import time
+        import os
         unique_id = int(time.time())
-        element = cl.Image(
-            name=f"Visual-CP{it.current_checkpoint}-S{it.current_step}-{unique_id}", 
-            path=self.image
-        )
         
-        # Only update sidebar if to_sidebar is True
-        if to_sidebar:
-            # Force clear the sidebar first to ensure old elements are removed
-            await cl.ElementSidebar.set_elements([])
+        # Check if image exists before trying to use it
+        if self.image and os.path.exists(self.image):
+            element = cl.Image(
+                name=f"Visual-CP{it.current_checkpoint}-S{it.current_step}-{unique_id}", 
+                path=self.image
+            )
             
-            # Then set the new element
-            await cl.ElementSidebar.set_elements([element])
-            await cl.ElementSidebar.set_title(f"Checkpoint {it.current_checkpoint} Image")
-        
-        # Always send the image in the chat
-        await cl.Message(content="", elements=[element]).send()
+            # Only update sidebar if to_sidebar is True
+            if to_sidebar:
+                # Force clear the sidebar first to ensure old elements are removed
+                await cl.ElementSidebar.set_elements([])
+                
+                # Then set the new element
+                await cl.ElementSidebar.set_elements([element])
+                await cl.ElementSidebar.set_title(f"Checkpoint {it.current_checkpoint} Image")
+            
+            # Always send the image in the chat
+            await cl.Message(content="", elements=[element]).send()
+        else:
+            # Log an error but don't crash if image doesn't exist
+            print(f"Warning: Image not found at path '{self.image}'")
         return
 
 
@@ -343,7 +350,7 @@ async def chat(input_message: cl.Message, state=None) -> None:
 
         message += "Dass hier ist die Musterantwort der zentralen Frage: \n"
         message += iterations.main_answer()
-        message += "\n\nLass ins mit der nächsten Aufgabe fortfahren.\n"
+        message += "\n\nLass uns mit der nächsten Aufgabe fortfahren.\n"
         await message.send()
         message = Message("")
         message += iterations.load_next_checkpoint()
