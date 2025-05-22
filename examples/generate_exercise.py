@@ -25,8 +25,10 @@ def main():
 
     # Generate a simple ANOVA exercise
     prompt = """
-    Generate a repeated-measures ANOVA exercise for beginners
-    in statistics. Include clear explanations and guided steps.
+    Generate a repeated-measures ANOVA exercise for beginners in statistics.
+    Include clear explanations, guided steps and figures. When writing in German
+    use umlauts instead of the corresponding hexadecimal escape sequence, use e.g.
+    'ü' instead of '\xFC'. Use 'ss' instead of 'ß'.
     """
 
     # Specify a markdown file with additional content

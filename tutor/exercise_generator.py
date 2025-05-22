@@ -59,7 +59,7 @@ class ExerciseGenerator:
                 model=self.model,
                 input=messages,
                 text_format=Exercise,
-                temperature=0.2
+                temperature=0.4
             )
 
             return response.output_parsed
@@ -144,7 +144,7 @@ def save_exercise(exercise, base_filename=None, formats=None, exercise_dir=None)
     import json
 
     # Set defaults
-    base_filename = base_filename or "generated_exercise"
+    base_filename = base_filename or "exercise"
     formats = formats or ["json"]
     exercise_dir = exercise_dir or "examples/generated-exercises"
 
