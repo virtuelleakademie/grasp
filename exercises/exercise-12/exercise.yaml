@@ -86,7 +86,7 @@ checkpoints:
       $\\hat{\\eta}^2 = \\frac{QS_{zwA}}{QS_{tot}}$ (nicht-partiell): Bezieht
       sich auf die Gesamtvarianz $\\hat{\\eta}^2_p = \\frac{QS_{zwA}}{QS_{zwA} +
       QS_{Res}}$ (partiell): Bezieht sich nur auf die Fehlervarianz nach
-      Kontrolle der Personenunterschiede"
+      Kontrolle der Personenunterschiede."
     image_solution: null
     steps:
       - step_number: 1
@@ -143,14 +143,17 @@ checkpoints:
           "Da der p-Wert $0{,}56973$ grösser als $0{,}05$ ist, wird die
           Sphärizitätsannahme **nicht verletzt**. Das bedeutet, die Varianzen
           der Differenzen sind annähernd gleich, und eine Korrektur ist
-          statistisch nicht zwingend erforderlich."
+          statistisch nicht zwingend erforderlich. Für diesen Test wählen wir
+          $\\alpha=0.1$."
         image: "figures/fig-3.png"
       - step_number: 2
         guiding_question:
-          "Bestimmen Sie zunächst die ursprünglichen Freiheitsgrade für den
-          Bedingungseffekt ($J = 3$ Faktorstufen). Korrigieren Sie diese dann
-          mit $\\hat{\\epsilon}_{GG} = 0{,}76176$. Die Freiheitsgrade für den
-          Nenner sind $df_{Res} = 8$."
+          "Obwohl die Sphärizitätsannahme nicht verletzt ist, wollen wir der
+          Übung halber die Freiheitsgrade dennoch korrigieren. Bestimmen Sie
+          zunächst die ursprünglichen Freiheitsgrade für den Bedingungseffekt
+          ($J = 3$ Faktorstufen). Korrigieren Sie diese dann mit
+          $\\hat{\\epsilon}_{GG} = 0{,}76176$. Die Freiheitsgrade für den Nenner
+          sind $df_{Res} = 8$."
         guiding_answer: "**Schritt 1: Ursprüngliche Freiheitsgrade bestimmen**
           $df_{zwA} = J - 1 = 3 - 1 = 2$
 
