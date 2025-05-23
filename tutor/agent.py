@@ -53,28 +53,28 @@ class Message:
     async def send_image(self, to_sidebar: bool = True, state=None) -> None:
         """Send an image."""
         it = state["iterations"]
-        
+
         # Create a more unique name for the image with timestamp to avoid caching issues
         import time
         import os
         unique_id = int(time.time())
-        
+
         # Check if image exists before trying to use it
         if self.image and os.path.exists(self.image):
             element = cl.Image(
-                name=f"Visual-CP{it.current_checkpoint}-S{it.current_step}-{unique_id}", 
+                name=f"Visual-CP{it.current_checkpoint}-S{it.current_step}-{unique_id}",
                 path=self.image
             )
-            
+
             # Only update sidebar if to_sidebar is True
             if to_sidebar:
                 # Force clear the sidebar first to ensure old elements are removed
                 await cl.ElementSidebar.set_elements([])
-                
+
                 # Then set the new element
                 await cl.ElementSidebar.set_elements([element])
                 await cl.ElementSidebar.set_title(f"Checkpoint {it.current_checkpoint} Image")
-            
+
             # Always send the image in the chat
             await cl.Message(content="", elements=[element]).send()
         else:
@@ -203,13 +203,40 @@ class Iterations:
 
     def guiding_answer(self) -> str:
         """Get the guiding answer for the current checkpoint and step."""
-        try:
-            if self.exercise:
-                return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_answer
-            else:
+        if self.exercise:
+            try:
+                checkpoint_idx = self.current_checkpoint - 1
+                # Use current_step directly as the step index since steps are 1-indexed in the exercise
+                # but we need to access the step we just completed
+                step_idx = self.current_step - 1
+                
+                if checkpoint_idx < 0 or checkpoint_idx >= len(self.exercise.checkpoints):
+                    return ""
+                
+                checkpoint = self.exercise.checkpoints[checkpoint_idx]
+                
+                # If step_idx is out of range, we might be trying to get the last step's answer
+                # after current_step was already incremented
+                if step_idx >= len(checkpoint.steps):
+                    step_idx = len(checkpoint.steps) - 1
+                
+                if step_idx < 0 or step_idx >= len(checkpoint.steps):
+                    return ""
+                    
+                answer = checkpoint.steps[step_idx].guiding_answer
+                if not answer or not answer.strip():
+                    return ""
+                
+                return answer
+                
+            except Exception as e:
+                return ""
+        else:
+            # Legacy mode
+            try:
                 return guiding_answers[self.current_checkpoint][self.current_step]
-        except:
-            return ""
+            except Exception as e:
+                return ""
 
     @with_agent_state
     def load_next_step(self, state=None) -> str:
@@ -343,12 +370,14 @@ async def chat(input_message: cl.Message, state=None) -> None:
         if understanding.main_question_answered:
             message += "\nYou Du hast die **zentrale Frage** richtig beantwortet!\n\n"
 
+        # Display the solution image only if it exists
         if iterations.image_solution():
             message_solution_image = Message("Hier siehst du eine Zusammenfassung der Lösung.")
             message_solution_image.image = iterations.image_solution()
             await message_solution_image.send(to_sidebar=True)
 
-        message += "Dass hier ist die Musterantwort der zentralen Frage: \n"
+        # Always display the main answer text
+        message += "Hier ist die Musterantwort der zentralen Frage: \n"
         message += iterations.main_answer()
         message += "\n\nLass uns mit der nächsten Aufgabe fortfahren.\n"
         await message.send()
@@ -360,8 +389,10 @@ async def chat(input_message: cl.Message, state=None) -> None:
             message += f"**System**: Moving to the next guiding question.\n"
         if understanding.guiding_question_answered:
             message += "\nDu hast die Frage richtig beantwortet!\n\n"
-        message += "Dass hier ist die Musterantwort dieser Frage: \n"
-        message += iterations.guiding_answer()
+        message += "Hier ist die Musterantwort dieser Frage: \n"
+        # Get the answer for the step we just completed
+        current_answer = iterations.guiding_answer()
+        message += current_answer
         await message.send()
         message = Message("")
         message += iterations.load_next_step()
