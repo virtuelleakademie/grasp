@@ -9,6 +9,9 @@ from tutor.output_structure import BasicOutput, Understanding, Feedback, Instruc
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# Default model can be overridden via environment variable
+DEFAULT_MODEL = os.getenv("TUTOR_MODEL", "gpt-4.1-mini")
+
 
 """
 ToDo
@@ -28,7 +31,7 @@ instructional
 
 
 @with_agent_state
-def llm_structured(messages, models=["gpt-4.1-mini", "gpt-4.1", "o3-mini"], temperature=0.5, top_p=0.5, response_format=None, state=None):
+def llm_structured(messages, model=None, temperature=0.5, top_p=0.5, response_format=None, state=None):
     """
     Create a new instance of the OpenAI model with the specified parameters.
     """
@@ -38,26 +41,26 @@ def llm_structured(messages, models=["gpt-4.1-mini", "gpt-4.1", "o3-mini"], temp
     if state["iterations"].finished:
         return response_format.empty()
 
-    for model in models:
-        try:
-            print(f"Try {model}")
-            output = client.beta.chat.completions.parse(
-                model=model,
-                messages=messages,
-                temperature=temperature if model != "o3-mini" else None,
-                top_p=top_p,
-                response_format=response_format,
-                timeout=5,
-            ).choices[0].message.parsed
-            return output
-        except Exception as e:
-            warning = f"**WARNING** Model {model} failed with error: {e}"
-            print(warning)
-            state["log"].append_system_message(warning)
-            continue
-    output = response_format.empty()
+    # Use provided model or fall back to default
+    if model is None:
+        model = DEFAULT_MODEL
 
-    return output
+    try:
+        print(f"Using model: {model}")
+        output = client.beta.chat.completions.parse(
+            model=model,
+            messages=messages,
+            temperature=temperature if model != "o3-mini" else None,
+            top_p=top_p,
+            response_format=response_format,
+            timeout=30,
+        ).choices[0].message.parsed
+        return output
+    except Exception as e:
+        warning = f"**WARNING** Model {model} failed with error: {e}"
+        print(warning)
+        state["log"].append_system_message(warning)
+        return response_format.empty()
 
 class TutorBasic:
     """
