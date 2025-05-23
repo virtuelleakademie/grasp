@@ -194,17 +194,7 @@ class Iterations:
         """Get the guiding question for the current checkpoint and step."""
         try:
             if self.exercise:
-                         def image_solution(self) -> str:
-                    """Get the image solution path for the current checkpoint."""
-                    try:
-                        if self.exercise:
-                            solution = self.exercise.checkpoints[self.current_checkpoint-1].image_solution
-                            # Return None for null/None values so we can check properly with if
-                            return solution if solution else None
-                        else:
-                            return image_solution.get(self.current_checkpoint)
-                    except:
-                        return None       return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_question
+                return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_question
             else:
                 question = guiding_questions[self.current_checkpoint][self.current_step]
             return question
@@ -216,6 +206,8 @@ class Iterations:
         if self.exercise:
             try:
                 checkpoint_idx = self.current_checkpoint - 1
+                # Use current_step directly as the step index since steps are 1-indexed in the exercise
+                # but we need to access the step we just completed
                 step_idx = self.current_step - 1
                 
                 # Debug info
@@ -227,6 +219,13 @@ class Iterations:
                     return error_msg
                 
                 checkpoint = self.exercise.checkpoints[checkpoint_idx]
+                
+                # If step_idx is out of range, we might be trying to get the last step's answer
+                # after current_step was already incremented
+                if step_idx >= len(checkpoint.steps):
+                    print(f"DEBUG: step_idx {step_idx} >= {len(checkpoint.steps)}, using last step")
+                    step_idx = len(checkpoint.steps) - 1
+                
                 if step_idx < 0 or step_idx >= len(checkpoint.steps):
                     error_msg = f"ERROR: Invalid step index {step_idx}. Available steps in checkpoint {self.current_checkpoint}: {len(checkpoint.steps)}"
                     print(error_msg)
@@ -406,7 +405,9 @@ async def chat(input_message: cl.Message, state=None) -> None:
         if understanding.guiding_question_answered:
             message += "\nDu hast die Frage richtig beantwortet!\n\n"
         message += "Hier ist die Musterantwort dieser Frage: \n"
-        message += iterations.guiding_answer()
+        # Get the answer for the step we just completed
+        current_answer = iterations.guiding_answer()
+        message += current_answer
         await message.send()
         message = Message("")
         message += iterations.load_next_step()
