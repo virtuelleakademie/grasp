@@ -81,9 +81,13 @@ checkpoints:
       der Messwiederholungs-ANOVA?
     main_answer: |
       Bei Messwiederholungsdesigns gibt es zwei Arten von Effektgrössen:
+
       $\hat{\eta}^2 = \frac{QS_{zwA}}{QS_{tot}}$ (nicht-partiell):
+
       Varianzanteil des Bedingungseffekts in Bezug auf die Gesamtvarianz; und
+
       $\hat{\eta}^2_p = \frac{QS_{zwA}}{QS_{zwA} + QS_{Res}}$ (partiell):
+
       relativiert den Bedingungseffekt nur an sich selbst und der Fehlervarianz
       (nach Kontrolle der Personenunterschiede).
     image_solution: null
@@ -93,11 +97,13 @@ checkpoints:
           Gegeben sind: $QS_{zwA} = 40$, $QS_{zwP} = 60$, $QS_{Res} = 54$.
           Berechnen Sie aus diesen Angaben beide Effektgrössen $\hat{\eta}^2$
           und $\hat{\eta}^2_p$ und erklären Sie den Unterschied.
-        guiding_answer: |
-          **Formeln für Effektgrössen:**
-          $\hat{\eta}^2 = \frac{QS_{zwA}}{QS_{tot}}$ (nicht-partiell)
-          $\hat{\eta}^2_p = \frac{QS_{zwA}}{QS_{zwA} + QS_{Res}}$ (partiell)
 
+          **Formeln für Effektgrössen:**
+          $$\hat{\eta}^2 = \frac{QS_{zwA}}{QS_{tot}}$$ (nicht-partiell)
+
+          $$\hat{\eta}^2_p = \frac{QS_{zwA}}{QS_{zwA} + QS_{Res}}$$ (partiell)
+
+        guiding_answer: |
           **Schritt 1: Totale Quadratsumme berechnen**
           $QS_{tot} = QS_{zwA} + QS_{zwP} + QS_{Res} = 40 + 60 + 54 = 154$
 
@@ -198,5 +204,4 @@ checkpoints:
           p-Wert des Bedingungseffekts standardmässig an, unabhängig vom
           Ergebnis des Mauchly-Tests. Die GG-korrigierten Freiheitsgrade selbst
           erhält man nur mit dem $anova_table Output.
-        image: "figures/fig-3
-.png"
+        image: "figures/fig-3.png"
