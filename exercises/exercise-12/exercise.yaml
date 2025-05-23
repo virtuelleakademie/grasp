@@ -105,7 +105,7 @@ checkpoints:
           Der partielle Koeffizient ist höher, da er die systematischen
           Personenunterschiede herausrechnet und nur die relevante Fehlervarianz
           betrachtet."
-        image: "figures/fig-2.png"
+        image: null
       - step_number: 2
         guiding_question:
           "Welche Effektgrösse sollte man wann verwenden und wie interpretiert
@@ -121,7 +121,7 @@ checkpoints:
           wird. Sinnvoll für Vergleiche mit anderen Studien, die ebenfalls
           Personenunterschiede kontrolliert haben."
 
-        image: "figures/fig-2.png"
+        image: null
   - checkpoint_number: 3
     main_question:
       "Was ist Sphärizität, wie wird sie getestet, und wie korrigiert man bei
