@@ -203,13 +203,46 @@ class Iterations:
 
     def guiding_answer(self) -> str:
         """Get the guiding answer for the current checkpoint and step."""
-        try:
-            if self.exercise:
-                return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_answer
-            else:
+        if self.exercise:
+            try:
+                checkpoint_idx = self.current_checkpoint - 1
+                step_idx = self.current_step - 1
+                
+                # Debug info
+                print(f"DEBUG: Getting guiding answer for checkpoint {self.current_checkpoint} (idx: {checkpoint_idx}), step {self.current_step} (idx: {step_idx})")
+                
+                if checkpoint_idx < 0 or checkpoint_idx >= len(self.exercise.checkpoints):
+                    error_msg = f"ERROR: Invalid checkpoint index {checkpoint_idx}. Available checkpoints: {len(self.exercise.checkpoints)}"
+                    print(error_msg)
+                    return error_msg
+                
+                checkpoint = self.exercise.checkpoints[checkpoint_idx]
+                if step_idx < 0 or step_idx >= len(checkpoint.steps):
+                    error_msg = f"ERROR: Invalid step index {step_idx}. Available steps in checkpoint {self.current_checkpoint}: {len(checkpoint.steps)}"
+                    print(error_msg)
+                    return error_msg
+                    
+                answer = checkpoint.steps[step_idx].guiding_answer
+                if not answer or not answer.strip():
+                    error_msg = f"ERROR: Empty guiding_answer for checkpoint {self.current_checkpoint}, step {self.current_step}"
+                    print(error_msg)
+                    return error_msg
+                
+                print(f"DEBUG: Successfully retrieved answer: {answer[:50]}...")
+                return answer
+                
+            except Exception as e:
+                error_msg = f"ERROR in guiding_answer: {str(e)} (checkpoint: {self.current_checkpoint}, step: {self.current_step})"
+                print(error_msg)
+                return error_msg
+        else:
+            # Legacy mode
+            try:
                 return guiding_answers[self.current_checkpoint][self.current_step]
-        except:
-            return ""
+            except Exception as e:
+                error_msg = f"ERROR in legacy guiding_answer: {str(e)}"
+                print(error_msg)
+                return error_msg
 
     @with_agent_state
     def load_next_step(self, state=None) -> str:
