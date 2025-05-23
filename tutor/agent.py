@@ -270,6 +270,13 @@ class Iterations:
         return message
 
     @with_agent_state
+    async def clear_sidebar_if_no_image(self, state=None) -> None:
+        """Clear the sidebar if the current checkpoint has no solution image."""
+        if not self.image_solution():
+            await cl.ElementSidebar.set_elements([])
+            await cl.ElementSidebar.set_title("")
+
+    @with_agent_state
     def load_next_checkpoint(self, state=None) -> str:
         """Advance to the next checkpoint and load its main question."""
         self.step = 0
@@ -317,6 +324,8 @@ Viel Erfolg beim Lernen!
     # This function is a placeholder for the actual inital message.
     message += state["iterations"].load_next_checkpoint()
     await message.send()
+    # Clear sidebar if the first checkpoint has no solution image
+    await state["iterations"].clear_sidebar_if_no_image()
     return
 
 
@@ -383,6 +392,8 @@ async def chat(input_message: cl.Message, state=None) -> None:
         await message.send()
         message = Message("")
         message += iterations.load_next_checkpoint()
+        # Clear sidebar if the new checkpoint has no solution image
+        await iterations.clear_sidebar_if_no_image()
     elif understanding.guiding_question_answered or not iterations.has_step_iterations_left():
         ## moving to the next guiding question
         if state["debugging"]:
