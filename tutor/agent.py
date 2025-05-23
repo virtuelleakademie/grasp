@@ -53,28 +53,28 @@ class Message:
     async def send_image(self, to_sidebar: bool = True, state=None) -> None:
         """Send an image."""
         it = state["iterations"]
-        
+
         # Create a more unique name for the image with timestamp to avoid caching issues
         import time
         import os
         unique_id = int(time.time())
-        
+
         # Check if image exists before trying to use it
         if self.image and os.path.exists(self.image):
             element = cl.Image(
-                name=f"Visual-CP{it.current_checkpoint}-S{it.current_step}-{unique_id}", 
+                name=f"Visual-CP{it.current_checkpoint}-S{it.current_step}-{unique_id}",
                 path=self.image
             )
-            
+
             # Only update sidebar if to_sidebar is True
             if to_sidebar:
                 # Force clear the sidebar first to ensure old elements are removed
                 await cl.ElementSidebar.set_elements([])
-                
+
                 # Then set the new element
                 await cl.ElementSidebar.set_elements([element])
                 await cl.ElementSidebar.set_title(f"Checkpoint {it.current_checkpoint} Image")
-            
+
             # Always send the image in the chat
             await cl.Message(content="", elements=[element]).send()
         else:
@@ -348,7 +348,7 @@ async def chat(input_message: cl.Message, state=None) -> None:
             message_solution_image.image = iterations.image_solution()
             await message_solution_image.send(to_sidebar=True)
 
-        message += "Dass hier ist die Musterantwort der zentralen Frage: \n"
+        message += "Hier ist die Musterantwort der zentralen Frage: \n"
         message += iterations.main_answer()
         message += "\n\nLass uns mit der nächsten Aufgabe fortfahren.\n"
         await message.send()
@@ -360,7 +360,7 @@ async def chat(input_message: cl.Message, state=None) -> None:
             message += f"**System**: Moving to the next guiding question.\n"
         if understanding.guiding_question_answered:
             message += "\nDu hast die Frage richtig beantwortet!\n\n"
-        message += "Dass hier ist die Musterantwort dieser Frage: \n"
+        message += "Hier ist die Musterantwort dieser Frage: \n"
         message += iterations.guiding_answer()
         await message.send()
         message = Message("")
