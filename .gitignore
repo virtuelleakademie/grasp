@@ -29,6 +29,9 @@ venv/
 # Chainlit
 .chainlit*
 
+# Claude Code
+CLAUDE.md
+
 # Aider
 .aider*
 
