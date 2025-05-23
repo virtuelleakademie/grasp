@@ -10,7 +10,7 @@ from tutor.output_structure import BasicOutput, Understanding, Feedback, Instruc
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 # Default model can be overridden via environment variable
-DEFAULT_MODEL = os.getenv("TUTOR_MODEL", "gpt-4.1-mini")
+DEFAULT_MODEL = os.getenv("TUTOR_MODEL", "gpt-4.1")
 
 
 """
