@@ -194,7 +194,17 @@ class Iterations:
         """Get the guiding question for the current checkpoint and step."""
         try:
             if self.exercise:
-                return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_question
+                         def image_solution(self) -> str:
+                    """Get the image solution path for the current checkpoint."""
+                    try:
+                        if self.exercise:
+                            solution = self.exercise.checkpoints[self.current_checkpoint-1].image_solution
+                            # Return None for null/None values so we can check properly with if
+                            return solution if solution else None
+                        else:
+                            return image_solution.get(self.current_checkpoint)
+                    except:
+                        return None       return self.exercise.checkpoints[self.current_checkpoint-1].steps[self.current_step-1].guiding_question
             else:
                 question = guiding_questions[self.current_checkpoint][self.current_step]
             return question
@@ -376,11 +386,13 @@ async def chat(input_message: cl.Message, state=None) -> None:
         if understanding.main_question_answered:
             message += "\nYou Du hast die **zentrale Frage** richtig beantwortet!\n\n"
 
+        # Display the solution image only if it exists
         if iterations.image_solution():
             message_solution_image = Message("Hier siehst du eine Zusammenfassung der Lösung.")
             message_solution_image.image = iterations.image_solution()
             await message_solution_image.send(to_sidebar=True)
 
+        # Always display the main answer text
         message += "Hier ist die Musterantwort der zentralen Frage: \n"
         message += iterations.main_answer()
         message += "\n\nLass uns mit der nächsten Aufgabe fortfahren.\n"
