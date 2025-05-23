@@ -79,43 +79,48 @@ checkpoints:
         image: "figures/fig-1.png"
   - checkpoint_number: 2
     main_question:
-      "Wie unterscheiden sich nicht-partielle und partielle Effektgrössen bei der
-      Messwiederholungs-ANOVA, und warum ist diese Unterscheidung wichtig?"
+      "Wie unterscheiden sich nicht-partielle und partielle Effektgrössen bei
+      der Messwiederholungs-ANOVA, und warum ist diese Unterscheidung wichtig?"
     main_answer:
-      "Nicht-partielle Effektgrössen ($\\hat{\\eta}^2$) beziehen sich auf die
-      erklärte Varianz im Verhältnis zur Gesamtvarianz, während partielle
-      Effektgrössen ($\\hat{\\eta}^2_p$) die erklärte Varianz im Verhältnis zur
-      erklärten Varianz plus Fehler nach Kontrolle der Personenunterschiede
-      angeben. Die partielle Effektgrösse ist aussagekräftiger, da sie stabile
-      individuelle Unterschiede herausrechnet."
+      "Bei Messwiederholungsdesigns gibt es zwei Arten von Effektgrössen:
+      $\\hat{\\eta}^2 = \\frac{QS_{zwA}}{QS_{tot}}$ (nicht-partiell): Bezieht
+      sich auf die Gesamtvarianz $\\hat{\\eta}^2_p = \\frac{QS_{zwA}}{QS_{zwA} +
+      QS_{Res}}$ (partiell): Bezieht sich nur auf die Fehlervarianz nach
+      Kontrolle der Personenunterschiede"
     image_solution: null
     steps:
       - step_number: 1
         guiding_question:
-          "Gegeben sind: $QS_{tot} = 154$, $QS_{zwA} = 40$, $QS_{Res} = 54$.
-          Berechnen Sie die nicht-partielle Effektgrösse $\\hat{\\eta}^2$ und die
-          partielle Effektgrösse $\\hat{\\eta}^2_p$."
-        guiding_answer:
-          "Berechnung:\n- Nicht-partielle Effektgrösse:\n  $$\\hat{\\eta}^2 =
-          \\frac{QS_{zwA}}{QS_{tot}} = \\frac{40}{154} \\approx 0{,}260$$\n-
-          Partielle Effektgrösse:\n  $$\\hat{\\eta}^2_p =
-          \\frac{QS_{zwA}}{QS_{zwA} + QS_{Res}} = \\frac{40}{40 + 54} =
-          \\frac{40}{94} \\approx 0{,}426$$\n\n Die partielle Effektgrösse ist
-          grösser, da sie die Varianz durch stabile Personenunterschiede
-          bereinigt."
+          "Gegeben sind: $QS_{zwP} = 60$, $QS_{zwA} = 40$, $QS_{Res} = 54$.
+          Berechnen Sie zunächst $QS_{tot}$, dann beide Effektgrössen und
+          erklären Sie den Unterschied."
+        guiding_answer: "**Schritt 1: Totale Quadratsumme berechnen** $QS_{tot}
+          = QS_{zwP} + QS_{zwA} + QS_{Res} = 60 + 40 + 54 = 154$
+
+          **Schritt 2: Effektgrössen berechnen** - **Nicht-partiell:**
+          $\\hat{\\eta}^2 = \\frac{40}{154} = 0{,}260$ (26,0% der Gesamtvarianz)
+          - **Partiell:** $\\hat{\\eta}^2_p = \\frac{40}{40 + 54} =
+          \\frac{40}{94} = 0{,}426$ (42,6% der bereinigten Varianz)
+
+          Der partielle Koeffizient ist höher, da er die systematischen
+          Personenunterschiede herausrechnet und nur die relevante Fehlervarianz
+          betrachtet."
         image: "figures/fig-2.png"
       - step_number: 2
         guiding_question:
-          "Welche Effektgrösse ist bei Messwiederholungsdesigns aussagekräftiger
-          und warum? Wie interpretiert man den Wert $\\hat{\\eta}^2_p = 0{,}426$
-          nach Cohen?"
-        guiding_answer:
-          "Die partielle Effektgrösse $\\hat{\\eta}^2_p$ ist aussagekräftiger, da
-          sie zeigt, wie viel Varianz durch den Faktor erklärt wird, nachdem
-          stabile Personenunterschiede kontrolliert wurden.\n\nInterpretation
-          nach Cohen:\n- $0{,}01$: kleiner Effekt\n- $0{,}06$: mittlerer
-          Effekt\n- $0{,}14$: grosser Effekt\n\nUnser Wert $0{,}426$ entspricht
-          einem sehr grossen Effekt."
+          "Welche Effektgrösse sollte man wann verwenden und wie interpretiert
+          man beide Masse?"
+        guiding_answer: "Beide Effektgrössen haben ihre Berechtigung:
+
+          - **$\\hat{\\eta}^2$**: Zeigt den Anteil der Gesamtvarianz, der durch
+          den Faktor erklärt wird. Sinnvoll für die Bewertung der praktischen
+          Bedeutsamkeit in der Gesamtpopulation.
+
+          - **$\\hat{\\eta}^2_p$**: Zeigt den Anteil der Fehlervarianz (nach
+          Kontrolle der Personenunterschiede), der durch den Faktor erklärt
+          wird. Sinnvoll für Vergleiche mit anderen Studien, die ebenfalls
+          Personenunterschiede kontrolliert haben."
+
         image: "figures/fig-2.png"
   - checkpoint_number: 3
     main_question:
@@ -142,14 +147,23 @@ checkpoints:
         image: "figures/fig-3.png"
       - step_number: 2
         guiding_question:
-          "Die ursprünglichen Freiheitsgrade sind $df_{zwA} = 2$ und $df_{Res} =
-          8$. Korrigieren Sie diese mit dem Greenhouse-Geisser-Korrekturfaktor
-          $\\hat{\\epsilon}_{GG} = 0{,}76176$."
-        guiding_answer:
-          "Berechnung der korrigierten Freiheitsgrade:\n- Zähler:
-          $df_{zwA}^{korr} = 2 \\times 0{,}76176 = 1{,}524$\n- Nenner:
-          $df_{Res}^{korr} = 8 \\times 0{,}76176 = 6{,}094$\n\nDiese Korrektur
-          führt zu einem konservativeren Test mit höheren kritischen F-Werten."
+          "Bestimmen Sie zunächst die ursprünglichen Freiheitsgrade für den
+          Bedingungseffekt ($J = 3$ Faktorstufen). Korrigieren Sie diese dann
+          mit $\\hat{\\epsilon}_{GG} = 0{,}76176$. Die Freiheitsgrade für den
+          Nenner sind $df_{Res} = 8$."
+        guiding_answer: "**Schritt 1: Ursprüngliche Freiheitsgrade bestimmen**
+          $df_{zwA} = J - 1 = 3 - 1 = 2$
+
+          **Schritt 2: Korrigierte Freiheitsgrade berechnen** - Zähler:
+          $df_{zwA}^{korr} = 2 \\times 0{,}76176 = 1{,}524$ - Nenner:
+          $df_{Res}^{korr} = 8 \\times 0{,}76176 = 6{,}094$
+
+          Dies führt zu einem konservativeren (grösseren) kritischen F-Wert und
+          somit zu einem strengeren Test.
+
+          **Kritischer F-Wert:** - Ursprünglich: $F_{(0{,}95; 2; 8)} = 4{,}459$
+          - Korrigiert: $F_{(0{,}95; 1{,}524; 6{,}094)} \\approx 5{,}2$
+          (konservativer)"
         image: "figures/fig-3.png"
       - step_number: 3
         guiding_question:
