@@ -1,7 +1,11 @@
 import os
 from pydantic import BaseModel
 from pydantic_ai import Agent
+from dotenv import load_dotenv
 from tutor.models.context import TutorContext
+
+# Load environment variables
+load_dotenv()
 
 class BaseAgentConfig(BaseModel):
     model: str = os.getenv("TUTOR_MODEL", "openai:gpt-4o")
