@@ -244,7 +244,7 @@ class Iterations:
         # update counters and state
         self.step = 0
         self.current_step += 1
-        state["current_understanding"].guiding_question_answered = False
+        # Don't reset guiding_question_answered here - it should only be reset when we actually move to a new question
         state["log"].append_system_message(f"**System:** Move to Checkpoint {self.current_checkpoint}, Step {self.current_step}.")
 
         # load next question
