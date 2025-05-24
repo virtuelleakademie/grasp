@@ -244,18 +244,21 @@ class Iterations:
         # update counters and state
         self.step = 0
         self.current_step += 1
-        # Don't reset guiding_question_answered here - it should only be reset when we actually move to a new question
         state["log"].append_system_message(f"**System:** Move to Checkpoint {self.current_checkpoint}, Step {self.current_step}.")
 
         # load next question
         message = Message("")
         if self.has_another_step():
+            # Only reset guiding_question_answered when moving to a NEW guiding question
+            state["current_understanding"].guiding_question_answered = False
             if state["debugging"]:
                 print(f"System: Loading guiding question for Checkpoint {self.current_checkpoint} and Step {self.current_step}.")
             message.image = self.image()
             message += f"\n\nLass uns {'zuerst' if self.current_step == 1 else 'jetzt'} über diese Frage nachdenken:\n"
             message += self.guiding_question()
         else:
+            # Don't reset guiding_question_answered when moving to main question
+            # The previous guiding question was answered correctly
             if state["debugging"]:
                 print(f"System: Loading main question for Checkpoint {self.current_checkpoint} at Step {self.current_step} > {self.n_steps[self.current_checkpoint]}.")
             message += "Lass uns nun wieder über die eigentliche Frage nachdenken:\n"
