@@ -1,14 +1,18 @@
 # New Architecture with PydanticAI
 
+> **⚠️ UPDATED STRATEGY**: This document describes the PydanticAI architecture with Chainlit UI. For the **recommended Gradio-First approach**, see [04-GRADIO_FIRST_MIGRATION.md](./04-GRADIO_FIRST_MIGRATION.md) and [05-GRADIO_TECHNICAL_SPEC.md](./05-GRADIO_TECHNICAL_SPEC.md).
+
 ## Architecture Overview
 
 The new architecture follows a layered approach with clear separation of concerns:
+
+**Note**: The diagrams below show Chainlit in the presentation layer. The recommended approach uses Gradio instead, as detailed in [05-GRADIO_TECHNICAL_SPEC.md](./05-GRADIO_TECHNICAL_SPEC.md).
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Presentation Layer                       │
 │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────── │
-│  │   Chainlit UI   │  │  Web Interface  │  │  API Endpoints │
+│  │   Gradio UI     │  │  Web Interface  │  │  API Endpoints │
 │  └─────────────────┘  └─────────────────┘  └─────────────── │
 └─────────────────────────────────────────────────────────────┘
                               │
@@ -111,7 +115,7 @@ class BaseAgentConfig(BaseModel):
     timeout: int = 30
 
 def create_base_agent(
-    result_type: type,
+    output_type: type,
     system_prompt: str,
     config: BaseAgentConfig = None
 ) -> Agent:
@@ -121,7 +125,7 @@ def create_base_agent(
     return Agent(
         config.model,
         deps_type=TutorContext,
-        result_type=result_type,
+        output_type=output_type,
         system_prompt=system_prompt,
         model_settings={
             "temperature": config.temperature,
@@ -142,7 +146,7 @@ from tutor.agents.base_agent import create_base_agent
 from tutor.config.prompts import UNDERSTANDING_SYSTEM_PROMPT
 
 understanding_agent = create_base_agent(
-    result_type=Understanding,
+    output_type=Understanding,
     system_prompt=UNDERSTANDING_SYSTEM_PROMPT
 )
 
