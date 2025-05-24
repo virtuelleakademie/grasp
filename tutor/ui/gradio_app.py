@@ -2,10 +2,14 @@ import gradio as gr
 import os
 import asyncio
 from typing import Dict, Any, Tuple, List
+from dotenv import load_dotenv
 from tutor.ui.gradio_bridge import GradioTutorBridge
 from tutor.ui.components.chat_tab import ChatTab
 from tutor.ui.components.evaluation_tab import EvaluationTab
 from tutor.models.gradio_state import GradioSessionState, initialize_gradio_state
+
+# Load environment variables
+load_dotenv()
 
 class TutorApp:
     def __init__(self):
