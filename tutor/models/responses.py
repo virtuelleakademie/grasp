@@ -15,7 +15,15 @@ class Understanding(BaseModel):
     @classmethod
     def empty(cls) -> "Understanding":
         """Create empty understanding state"""
-        return cls()
+        return cls(
+            main_question_answered=False,
+            guiding_question_answered=False,
+            confidence_score=0.5,
+            identified_concepts=[],
+            misconceptions=[],
+            summary=[],
+            reasoning=""
+        )
     
     def summary_text(self) -> str:
         """Get formatted summary text"""
@@ -30,6 +38,17 @@ class Feedback(BaseModel):
     areas_for_improvement: List[str] = Field(default_factory=list)
     encouragement_level: str = Field(default="moderate")  # low, moderate, high
     reasoning: str = ""
+    
+    @classmethod
+    def empty(cls) -> "Feedback":
+        """Create empty feedback state"""
+        return cls(
+            feedback="I'm having trouble processing your response right now. Please try again.",
+            positive_aspects=[],
+            areas_for_improvement=[],
+            encouragement_level="moderate",
+            reasoning=""
+        )
 
 class Instructions(BaseModel):
     """Response model for instruction generation by PydanticAI agent"""
@@ -37,6 +56,16 @@ class Instructions(BaseModel):
     instruction_type: str = "guidance"  # question, hint, explanation, redirect
     follow_up_questions: List[str] = Field(default_factory=list)
     reasoning: str = ""
+    
+    @classmethod
+    def empty(cls) -> "Instructions":
+        """Create empty instructions state"""
+        return cls(
+            instructions="Let me help you think about this step by step. Can you tell me what you understand so far?",
+            instruction_type="guidance",
+            follow_up_questions=[],
+            reasoning=""
+        )
 
 class TutorResponse(BaseModel):
     """Comprehensive response from tutor coordinator"""
