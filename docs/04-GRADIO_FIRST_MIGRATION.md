@@ -241,7 +241,7 @@ class TutorApp:
 ```python
 # tutor/services/simple_coordinator.py
 from tutor.models.context import SimpleTutorContext
-from tutor.agents import understanding_agent, feedback_agent, instruction_agent
+from tutor.agents import understanding_agent, feedback_agent, instruction_agent, literature_verification_agent
 
 class SimpleTutorCoordinator:
     """Simplified coordinator for initial Gradio integration"""
@@ -250,6 +250,7 @@ class SimpleTutorCoordinator:
         self.understanding_agent = understanding_agent
         self.feedback_agent = feedback_agent
         self.instruction_agent = instruction_agent
+        self.literature_verification_agent = literature_verification_agent
     
     async def process_message(self, message: str, context: dict) -> dict:
         """Process message and return response with updated context"""
@@ -266,11 +267,19 @@ class SimpleTutorCoordinator:
         understanding = await self.understanding_agent.run(message, deps=simple_context)
         feedback = await self.feedback_agent.run(message, deps=simple_context)
         
+        # Optional literature verification for uncertain responses
+        literature_verification = None
+        if understanding.confidence_score < 0.8:  # Low confidence threshold
+            literature_verification = await self.literature_verification_agent.run(
+                message, deps=simple_context
+            )
+        
         response = {
             'feedback': feedback.feedback,
             'instructions': None,
             'action': 'continue',
-            'understanding': understanding
+            'understanding': understanding,
+            'literature_verification': literature_verification
         }
         
         # Generate instructions if needed
