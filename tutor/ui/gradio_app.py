@@ -356,14 +356,18 @@ class TutorApp:
     
     def launch(self, **kwargs):
         """Launch the Gradio app"""
+        # Filter out parameters not supported by Gradio's launch method
+        supported_params = {
+            'server_name', 'server_port', 'share', 'debug', 'show_error',
+            'ssl_keyfile', 'ssl_certfile', 'ssl_keyfile_password', 'ssl_verify',
+            'max_threads', 'favicon_path', 'app_kwargs', 'state_session_capacity',
+            'show_api', 'allowed_paths', 'blocked_paths', 'root_path'
+        }
+        
+        filtered_kwargs = {k: v for k, v in kwargs.items() if k in supported_params}
+        
         app = self.create_app()
-        return app.launch(
-            server_name="0.0.0.0",
-            server_port=7860,
-            share=False,
-            show_error=True,
-            **kwargs
-        )
+        return app.launch(**filtered_kwargs)
 
 def main():
     """Main entry point"""
