@@ -59,7 +59,21 @@ class TutorCoordinator:
     ) -> Understanding:
         """Evaluate student understanding using PydanticAI agent"""
         try:
-            return await self.understanding_agent.run(message, deps=context)
+            result = await self.understanding_agent.run(message, deps=context)
+            understanding = result.data
+            
+            # Debug information
+            print(f"\n=== UNDERSTANDING DEBUG ===")
+            print(f"Student message: '{message}'")
+            print(f"Current guiding question: '{context.current_guiding_question}'")
+            print(f"Guiding question answered: {understanding.guiding_question_answered}")
+            print(f"Main question answered: {understanding.main_question_answered}")
+            print(f"Confidence score: {understanding.confidence_score}")
+            print(f"Step iterations: {context.iterations.step_interactions}/{context.max_step_iterations}")
+            print(f"Checkpoint iterations: {context.iterations.checkpoint_interactions}/{context.max_checkpoint_iterations}")
+            print("===========================\n")
+            
+            return understanding
         except Exception as e:
             print(f"Error in understanding evaluation: {e}")
             return Understanding.empty()
@@ -71,13 +85,11 @@ class TutorCoordinator:
     ) -> Feedback:
         """Generate constructive feedback using PydanticAI agent"""
         try:
-            return await self.feedback_agent.run(message, deps=context)
+            result = await self.feedback_agent.run(message, deps=context)
+            return result.data
         except Exception as e:
             print(f"Error in feedback generation: {e}")
-            return Feedback(
-                feedback="I'm having trouble processing your response right now. Please try again.",
-                reasoning=f"Error: {str(e)}"
-            )
+            return Feedback.empty()
     
     async def _create_response(
         self,
@@ -183,13 +195,11 @@ class TutorCoordinator:
     ) -> Instructions:
         """Generate instructions using PydanticAI agent"""
         try:
-            return await self.instruction_agent.run(message, deps=context)
+            result = await self.instruction_agent.run(message, deps=context)
+            return result.data
         except Exception as e:
             print(f"Error in instruction generation: {e}")
-            return Instructions(
-                instructions="Let me help you think about this step by step. Can you tell me what you understand so far?",
-                reasoning=f"Error: {str(e)}"
-            )
+            return Instructions.empty()
     
     def _create_error_response(self, error_message: str, context: TutorContext) -> TutorResponse:
         """Create error response when something goes wrong"""
