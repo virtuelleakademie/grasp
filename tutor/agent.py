@@ -521,9 +521,10 @@ async def chat(input_message: cl.Message, state=None) -> None:
             message_solution_image.image = iterations.image_solution()
             await message_solution_image.send(to_sidebar=True)
 
-        # Always display the main answer text
-        message += "Hier ist die Musterantwort der zentralen Frage: \n"
-        message += iterations.main_answer()
+        # Always display the main answer text, but only if we're not coming from a guiding question
+        if not understanding.guiding_question_answered:
+            message += "Hier ist die Musterantwort der zentralen Frage: \n"
+            message += iterations.main_answer()
         message += "\n\nLass uns mit der nächsten Aufgabe fortfahren.\n"
         await message.send()
 
