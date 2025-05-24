@@ -10,6 +10,10 @@ import os
 import sys
 import argparse
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Add the project root to Python path
 project_root = Path(__file__).parent
