@@ -52,6 +52,12 @@ Based on the requirement for evaluation features and multi-tab interface, we've 
 - Research-oriented data export
 - AI-powered feedback analysis
 
+**[08-LITERATURE_VERIFICATION_AGENT.md](./08-LITERATURE_VERIFICATION_AGENT.md)** - Literature Verification Agent
+- Fact-checking against statistical literature
+- Citation-backed corrections and clarifications
+- Common misconception detection
+- Integration with existing agent workflow
+
 ## Quick Start Guide
 
 ### For Implementation
@@ -80,6 +86,7 @@ Based on the requirement for evaluation features and multi-tab interface, we've 
 - **Agent Coordination**: Built-in multi-agent workflows
 - **Model Agnostic**: Easy to switch between AI providers
 - **Dependency Injection**: Clean, testable architecture
+- **Tool Integration**: Easy integration of external tools (literature database, fact-checking)
 
 ### Migration Benefits
 - **40% Code Reduction**: Simplified architecture
@@ -106,6 +113,12 @@ pip install pydantic-ai>=0.0.14 gradio>=4.36.1 pydantic>=2.0.0 plotly>=5.0.0 pan
 ### Optional for Advanced Features
 ```bash
 pip install textblob scikit-learn plotly-dash
+```
+
+### Literature Verification (Optional)
+```bash
+# For statistical literature database and fact-checking
+pip install sentence-transformers sqlite3 bibtexparser numpy
 ```
 
 ## Support & Maintenance
