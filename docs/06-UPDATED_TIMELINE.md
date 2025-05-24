@@ -52,6 +52,7 @@ mkdir -p tutor/{agents,services,models,ui/{components,styles}}
 - Integrate TutorContext with Gradio state
 - Connect existing ExerciseLoader with Gradio
 - Implement simplified coordinator for agent orchestration
+- Add literature verification agent for fact-checking
 - Test with real t-test exercise data
 
 **Days 6-7: Chat Features**
