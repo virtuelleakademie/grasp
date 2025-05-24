@@ -50,10 +50,14 @@ def main():
     
     args = parser.parse_args()
     
-    # Set environment variables if needed
+    # Check for required environment variables
     if not os.getenv("OPENAI_API_KEY"):
-        print("Warning: OPENAI_API_KEY environment variable not set")
-        print("Please set your OpenAI API key for the tutoring system to work properly")
+        print("Error: OPENAI_API_KEY not found!")
+        print("Please ensure you have a .env file with your OpenAI API key:")
+        print("OPENAI_API_KEY=your_api_key_here")
+        sys.exit(1)
+    else:
+        print("✓ OPENAI_API_KEY loaded from environment")
     
     # Import and launch the app
     try:
