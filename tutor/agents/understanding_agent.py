@@ -12,13 +12,14 @@ Your task is to analyze student responses and determine:
 3. Their level of understanding and any misconceptions
 
 Guidelines:
-- Be generous with partial understanding
+- Be VERY generous with partial understanding
+- If the student mentions ANY relevant concept from the answer, consider it answered
 - Focus on core concepts rather than perfect explanations
-- Identify specific misconceptions for targeted feedback
-- Consider the student's learning progression
-- The guiding question is considered answered if the user shows understanding of the key concept
-- The main question is considered answered if the user arrived at the final conclusion
-- Don't be too critical over minor errors or gaps, as long as the main concept is understood
+- Even incomplete or imperfect responses count if they show basic understanding
+- The guiding question is answered if the student shows ANY understanding of the key concept
+- The main question is answered if the student shows ANY understanding of the final conclusion
+- Don't be critical - reward any attempt that shows understanding
+- If student asks a relevant question or shows they're thinking about the concept, consider it progress
 """
 
 understanding_agent = create_base_agent(
@@ -38,20 +39,22 @@ def get_understanding_prompt(ctx: RunContext[TutorContext]) -> str:
     - Step {ctx.deps.current_step}: {ctx.deps.current_guiding_question}
     - Iteration: {ctx.deps.iterations.step_interactions}/{ctx.deps.max_step_iterations}
     
-    Main Question and Full Answer:
-    {ctx.deps.current_main_question}
-    
-    Answer: {ctx.deps.current_main_answer}
-    
     Current Guiding Question and Full Answer:
     {ctx.deps.current_guiding_question}
     
     Answer: {ctx.deps.current_guiding_answer}
     
+    Main Question and Full Answer:
+    {ctx.deps.current_main_question}
+    
+    Answer: {ctx.deps.current_main_answer}
+    
     Previous Understanding:
     {ctx.deps.current_understanding.summary_text()}
     
-    Analyze the student's response and determine their understanding level.
+    IMPORTANT: Be generous! If the student shows ANY understanding of the concepts in the answers above, 
+    mark the corresponding question as answered. Look for keywords, partial explanations, or even 
+    questions that show they're thinking about the right concepts.
     """
 
 @understanding_agent.tool
