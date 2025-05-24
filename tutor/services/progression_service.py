@@ -21,27 +21,53 @@ class ProgressionService:
         """
         iterations = context.iterations
         
+        # Debug information
+        print(f"\n=== PROGRESSION DEBUG ===")
+        print(f"Main question answered: {understanding.main_question_answered}")
+        print(f"Guiding question answered: {understanding.guiding_question_answered}")
+        print(f"Step iterations: {iterations.step_interactions}/{context.max_step_iterations}")
+        print(f"Checkpoint iterations: {iterations.checkpoint_interactions}/{context.max_checkpoint_iterations}")
+        print(f"Has step iterations left: {iterations.has_step_iterations_left(context.max_step_iterations)}")
+        print(f"Has checkpoint iterations left: {iterations.has_checkpoint_iterations_left(context.max_checkpoint_iterations)}")
+        print(f"Has next step: {self._has_next_step(context)}")
+        print(f"Has next checkpoint: {self._has_next_checkpoint(context)}")
+        
         # Check if main question is answered or checkpoint limit reached
         if (understanding.main_question_answered or 
             not iterations.has_checkpoint_iterations_left(context.max_checkpoint_iterations)):
             
             if self._has_next_checkpoint(context):
-                return "advance_checkpoint"
+                action = "advance_checkpoint"
+                print(f"Action: {action} (main question answered or checkpoint limit reached)")
+                print("==========================\n")
+                return action
             else:
-                return "finish"
+                action = "finish"
+                print(f"Action: {action} (no more checkpoints)")
+                print("==========================\n")
+                return action
         
         # Check if guiding question is answered or step limit reached
         elif (understanding.guiding_question_answered or 
               not iterations.has_step_iterations_left(context.max_step_iterations)):
             
             if self._has_next_step(context):
-                return "advance_step"
+                action = "advance_step"
+                print(f"Action: {action} (guiding question answered or step limit reached)")
+                print("==========================\n")
+                return action
             else:
                 # No more steps, continue with main question
-                return "continue_question"
+                action = "continue_question"
+                print(f"Action: {action} (no more steps, continue with main question)")
+                print("==========================\n")
+                return action
         
         else:
-            return "continue_question"
+            action = "continue_question"
+            print(f"Action: {action} (default - continue working on current question)")
+            print("==========================\n")
+            return action
     
     def get_next_step_content(self, context: TutorContext) -> dict:
         """Get content for the next step"""
