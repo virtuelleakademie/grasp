@@ -1,6 +1,10 @@
 # Implementation Guide: PydanticAI Migration
 
+> **⚠️ UPDATED STRATEGY**: This document describes the original 5-phase Chainlit migration. For the **recommended Gradio-First approach**, see [04-GRADIO_FIRST_MIGRATION.md](./04-GRADIO_FIRST_MIGRATION.md) which implements in 4 weeks with better evaluation features.
+
 ## Phase-by-Phase Implementation
+
+**Note**: This represents the original implementation plan with Chainlit. The recommended approach uses Gradio and is detailed in [06-UPDATED_TIMELINE.md](./06-UPDATED_TIMELINE.md).
 
 ### Phase 1: Foundation Setup (Week 1)
 
@@ -166,13 +170,13 @@ class AgentConfig(BaseModel):
 from pydantic_ai import Agent
 from tutor.config.agent_config import AgentConfig
 
-def create_base_agent(result_type: type, system_prompt: str) -> Agent:
+def create_base_agent(output_type: type, system_prompt: str) -> Agent:
     config = AgentConfig()
     
     return Agent(
         config.model,
         deps_type=None,  # Will be set when we implement TutorContext
-        result_type=result_type,
+        output_type=output_type,
         system_prompt=system_prompt,
         model_settings={
             "temperature": config.temperature,
@@ -196,7 +200,7 @@ the current questions correctly.
 """
 
 understanding_agent = create_base_agent(
-    result_type=Understanding,
+    output_type=Understanding,
     system_prompt=UNDERSTANDING_PROMPT
 )
 
@@ -225,7 +229,7 @@ Give encouraging feedback that acknowledges understanding and addresses gaps.
 """
 
 feedback_agent = create_base_agent(
-    result_type=Feedback,
+    output_type=Feedback,
     system_prompt=FEEDBACK_PROMPT
 )
 
@@ -240,7 +244,7 @@ without revealing answers directly.
 """
 
 instruction_agent = create_base_agent(
-    result_type=Instructions,
+    output_type=Instructions,
     system_prompt=INSTRUCTION_PROMPT
 )
 
@@ -301,7 +305,7 @@ from tutor.models.context import TutorContext
 understanding_agent = Agent(
     'openai:gpt-4o',
     deps_type=TutorContext,
-    result_type=Understanding
+    output_type=Understanding
 )
 
 @understanding_agent.system_prompt
