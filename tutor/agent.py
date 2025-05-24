@@ -299,7 +299,7 @@ class Iterations:
             else:
                 message += "Lass uns nun wieder über die eigentliche Frage nachdenken:\n"
                 message += self.main_question()
-                
+
             # Update state for the first step
             state["current_understanding"].guiding_question_answered = False
             state["log"].append_system_message(f"**System:** Move to Checkpoint {self.current_checkpoint}, Step {self.current_step}.")
@@ -321,9 +321,9 @@ Gruezi! Ich bin heute dein Tutor für Statistik.
 
 {first_msg}
 
-Wir werden nun einige Fragen durchgehen, die dir helfen sollen, das Konzept besser zu verstehen.
-Ich werde dir Rückmeldungen und Anleitungen geben, damit du die Aufgaben selbstständig bearbeiten kannst.
-Viel Erfolg beim Lernen!
+Wir werden nun einige Fragen durchgehen, die dir helfen sollen, das Konzept besser zu verstehen. \
+Ich werde dir Rückmeldungen und Anleitungen geben, damit du die Aufgaben selbstständig bearbeiten kannst.\n
+Viel Erfolg beim Lernen! \n
 """)
     # This function is a placeholder for the actual inital message.
     checkpoint_message = state["iterations"].load_next_checkpoint()
@@ -526,11 +526,11 @@ async def chat(input_message: cl.Message, state=None) -> None:
         message += iterations.main_answer()
         message += "\n\nLass uns mit der nächsten Aufgabe fortfahren.\n"
         await message.send()
-        
+
         # Load next checkpoint and send it properly with image
         checkpoint_message = iterations.load_next_checkpoint()
         await checkpoint_message.send()
-        
+
         # Clear sidebar if the new checkpoint has no solution image
         await iterations.clear_sidebar_if_no_image()
     elif understanding.guiding_question_answered or not iterations.has_step_iterations_left():

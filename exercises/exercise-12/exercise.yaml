@@ -1,7 +1,7 @@
 metadata:
-  title: |
-    Einfaktorielle Varianzanalyse mit Messwiederholung: Arbeitszufriedenheit
-    von Job-Einsteigern
+  title: >
+    Einfaktorielle Varianzanalyse mit Messwiederholung: Arbeitszufriedenheit von
+    Job-Einsteigern
   topic: Messwiederholungs-ANOVA
   level: Bachelor
   language: de
@@ -14,24 +14,24 @@ metadata:
     - Sphärizität
   version: "1.0"
   date_created: "2025-05-22"
-first_message: |
+first_message: >
   Willkommen zur interaktiven Übung zur einfaktoriellen Varianzanalyse mit
   Messwiederholung! Wir untersuchen gemeinsam eine Studie zur
   Arbeitszufriedenheit von Job-Einsteigern über drei Zeitpunkte. Schritt für
   Schritt lernen Sie, wie man die Daten analysiert, interpretiert und wichtige
   statistische Konzepte versteht. Los geht's!
-end_message: |
+end_message: >
   Herzlichen Glückwunsch! Sie haben nun die Grundlagen der einfaktoriellen
   Varianzanalyse mit Messwiederholung verstanden, inklusive Messwertzerlegung,
   Effektgrössen und Sphärizitätskorrektur. Nutzen Sie dieses Wissen, um eigene
   Daten sicher zu analysieren und zu interpretieren.
 checkpoints:
   - checkpoint_number: 1
-    main_question: |
+    main_question: >
       Wie zerlegt die Messwiederholungs-ANOVA die Gesamtvariation in
       verschiedene Komponenten, und was bedeuten Bedingungs- und
       Personeneffekte?
-    main_answer: |
+    main_answer: >
       Die Messwiederholungs-ANOVA zerlegt jeden Messwert in den
       Gesamtmittelwert, den Bedingungseffekt, den Personeneffekt und den
       Residualfehler: $$x_{mj} = \bar{x} + t_j + p_m + e_{mj}$$. Dadurch können
@@ -40,31 +40,28 @@ checkpoints:
     image_solution: null
     steps:
       - step_number: 1
-        guiding_question: |
+        guiding_question: >
           Was sind Bedingungseffekte und Personeneffekte? Berechnen Sie
           exemplarisch den Bedingungseffekt $t_2$ (nach 3 Monaten) und den
           Personeneffekt $p_1$ (Person 1) anhand der Tabelle.
-        guiding_answer: |
-          Bedingungseffekte ($t_j$) sind die Abweichungen der
-          Mittelwerte der Bedingungen vom Gesamtmittelwert. Personeneffekte
-          ($p_m$) sind die Abweichungen der Personenmittelwerte vom
-          Gesamtmittelwert.
+        guiding_answer: >
+          Bedingungseffekte ($t_j$) sind die Abweichungen der Mittelwerte der
+          Bedingungen vom Gesamtmittelwert. Personeneffekte ($p_m$) sind die
+          Abweichungen der Personenmittelwerte vom Gesamtmittelwert.
 
-          Gegebene Werte:
-          - Gesamtmittelwert: $\bar{x} = 7$
-          - Bedingungsmittelwert nach 3 Monaten: $\bar{x}_{\bullet 2} = 5$
-          - Personenmittelwert Person 1: $\bar{x}_{1\bullet} = 6$
+          Gegebene Werte: - Gesamtmittelwert: $\bar{x} = 7$ -
+          Bedingungsmittelwert nach 3 Monaten: $\bar{x}_{\bullet 2} = 5$ -
+          Personenmittelwert Person 1: $\bar{x}_{1\bullet} = 6$
 
-          Berechnung:
-          - $t_2 = \bar{x}_{\bullet 2} - \bar{x} = 5 - 7 = -2$
-          - $p_1 = \bar{x}_{1\bullet} - \bar{x} = 6 - 7 = -1$
+          Berechnung: - $t_2 = \bar{x}_{\bullet 2} - \bar{x} = 5 - 7 = -2$ -
+          $p_1 = \bar{x}_{1\bullet} - \bar{x} = 6 - 7 = -1$
         image: "figures/fig-1.png"
       - step_number: 2
-        guiding_question: |
+        guiding_question: >
           Wie kann man die Residualquadratsumme $QS_{Res}$ in der
           Messwiederholungs-ANOVA beschreiben, also welche Art von Effekten sind
           darin enthalten?
-        guiding_answer: |
+        guiding_answer: >
           Die Residualquadratsumme $QS_{Res}$ erfasst die Interaktion zwischen
           Person und Bedingung, also individuelle Unterschiede in der Reaktion
           auf die verschiedenen Bedingungen. Dieser Teil der Messwertvariation
@@ -72,14 +69,13 @@ checkpoints:
           Haupteffekte der Bedingungen erklärt werden und dient als Fehlerterm
           für den F-Test.
 
-          Formel:
-          $$QS_{Res} = QS_{tot} - QS_{zwP} - QS_{zwA}$$
+          Formel: $$QS_{Res} = QS_{tot} - QS_{zwP} - QS_{zwA}$$
         image: "figures/fig-1.png"
   - checkpoint_number: 2
-    main_question: |
-      Wie unterscheiden sich nicht-partielle und partielle Effektgrössen bei
-      der Messwiederholungs-ANOVA?
-    main_answer: |
+    main_question: >
+      Wie unterscheiden sich nicht-partielle und partielle Effektgrössen bei der
+      Messwiederholungs-ANOVA?
+    main_answer: >
       Bei Messwiederholungsdesigns gibt es zwei Arten von Effektgrössen:
 
       $\hat{\eta}^2 = \frac{QS_{zwA}}{QS_{tot}}$ (nicht-partiell):
@@ -93,36 +89,35 @@ checkpoints:
     image_solution: null
     steps:
       - step_number: 1
-        guiding_question: |
+        guiding_question: >
           Gegeben sind: $QS_{zwA} = 40$, $QS_{zwP} = 60$, $QS_{Res} = 54$.
           Berechnen Sie aus diesen Angaben beide Effektgrössen $\hat{\eta}^2$
           und $\hat{\eta}^2_p$ und erklären Sie den Unterschied.
 
-          **Formeln für Effektgrössen:**
-          $$\hat{\eta}^2 = \frac{QS_{zwA}}{QS_{tot}}$$ (nicht-partiell)
+          **Formeln für Effektgrössen:** $$\hat{\eta}^2 =
+          \frac{QS_{zwA}}{QS_{tot}}$$ (nicht-partiell)
 
           $$\hat{\eta}^2_p = \frac{QS_{zwA}}{QS_{zwA} + QS_{Res}}$$ (partiell)
 
-        guiding_answer: |
-          **Schritt 1: Totale Quadratsumme berechnen**
-          $QS_{tot} = QS_{zwA} + QS_{zwP} + QS_{Res} = 40 + 60 + 54 = 154$
+        guiding_answer: >
+          **Schritt 1: Totale Quadratsumme berechnen** $QS_{tot} = QS_{zwA} +
+          QS_{zwP} + QS_{Res} = 40 + 60 + 54 = 154$
 
-          **Schritt 2: Effektgrössen berechnen**
-          **Nicht-partiell:** $\hat{\eta}^2 = \frac{40}{154} = 0{,}260$
-          (26,0% der Gesamtvarianz)
+          **Schritt 2: Effektgrössen berechnen** **Nicht-partiell:**
+          $\hat{\eta}^2 = \frac{40}{154} = 0{,}260$ (26,0% der Gesamtvarianz)
 
-          **Partiell:** $\hat{\eta}^2_p = \frac{40}{40 + 54} = \frac{40}{94}
-          = 0{,}426$ (42,6% der für Personeneffekte bereinigten Varianz)
+          **Partiell:** $\hat{\eta}^2_p = \frac{40}{40 + 54} = \frac{40}{94} =
+          0{,}426$ (42,6% der für Personeneffekte bereinigten Varianz)
 
           Der partielle Koeffizient ist höher, da er die systematischen
           Personenunterschiede herausrechnet und nur die relevante Fehlervarianz
           betrachtet.
         image: null
       - step_number: 2
-        guiding_question: |
+        guiding_question: >
           Welche Effektgrösse sollte man wann verwenden und wie interpretiert
           man beide Masse?
-        guiding_answer: |
+        guiding_answer: >
           Beide Effektgrössen haben ihre Berechtigung:
 
           - **$\hat{\eta}^2$**: Zeigt den Anteil der Gesamtvarianz, der durch
@@ -138,10 +133,10 @@ checkpoints:
           Studie unterscheiden.
         image: null
   - checkpoint_number: 3
-    main_question: |
+    main_question: >
       Was ist Sphärizität, wie wird sie getestet, und wie korrigiert man bei
       Verletzung den F-Test der Messwiederholungs-ANOVA?
-    main_answer: |
+    main_answer: >
       Sphärizität bedeutet, dass die Varianzen aller Differenzvariablen (z.B.
       $X_1 - X_2$, $X_1 - X_3$, $X_2 - X_3$) gleich sind. Sie wird mit dem
       Mauchly-Test geprüft. Bei Verletzung der Sphärizitätsannahme werden die
@@ -151,10 +146,10 @@ checkpoints:
     image_solution: null
     steps:
       - step_number: 1
-        guiding_question: |
+        guiding_question: >
           Der Mauchly-Test zeigt einen p-Wert von $0{,}56973$. Was bedeutet das
           für die Sphärizitätsannahme?
-        guiding_answer: |
+        guiding_answer: >
           Da der p-Wert $0{,}56973$ grösser als $0{,}05$ ist, ist die
           Sphärizitätsannahme **nicht verletzt**. Das bedeutet, die Varianzen
           der Differenzen sind annähernd gleich, und eine Korrektur ist
@@ -162,38 +157,36 @@ checkpoints:
           wegen 'Nullhypothese = Wunschhypothese' ein $\alpha=0.1$.
         image: "figures/fig-3.png"
       - step_number: 2
-        guiding_question: |
+        guiding_question: >
           Obwohl die Sphärizitätsannahme nicht verletzt ist, wollen wir der
           Übung halber die korrigierten Zähler- und Nennerfreiheitsgrade
           berechnen. Bestimmen Sie zunächst die ursprünglichen Freiheitsgrade
           für den Bedingungseffekt ($J = 3$ Faktorstufen). Korrigieren Sie diese
           dann mit $\hat{\epsilon}_{GG} = 0{,}76176$. Die unkorrigierten
           Nennerfreiheitsgrade des F-Tests sind in diesem Modell $df_{Res} = 8$.
-        guiding_answer: |
-          **Schritt 1: Ursprüngliche Freiheitsgrade bestimmen**
-          $df_{zwA} = J - 1 = 3 - 1 = 2$
+        guiding_answer: >
+          **Schritt 1: Ursprüngliche Freiheitsgrade bestimmen** $df_{zwA} = J -
+          1 = 3 - 1 = 2$
 
-          **Schritt 2: Korrigierte Freiheitsgrade berechnen**
-          - Zähler: $df_{zwA}^{korr} = 2 \times 0{,}76176 = 1{,}524$
-          - Nenner: $df_{Res}^{korr} = 8 \times 0{,}76176 = 6{,}094$
+          **Schritt 2: Korrigierte Freiheitsgrade berechnen** - Zähler:
+          $df_{zwA}^{korr} = 2 \times 0{,}76176 = 1{,}524$ - Nenner:
+          $df_{Res}^{korr} = 8 \times 0{,}76176 = 6{,}094$
 
           Dies führt zu einem konservativeren (grösseren) kritischen F-Wert und
           somit zu einem strengeren Test.
 
-          **Kritischer F-Wert:**
-          - Ursprünglich: $F_{(0{,}95; 2; 8)} = 4{,}459$
+          **Kritischer F-Wert:** - Ursprünglich: $F_{(0{,}95; 2; 8)} = 4{,}459$
           - Korrigiert: $F_{(0{,}95; 1{,}524; 6{,}094)} \approx 5{,}2$
           (konservativer)
         image: "figures/fig-3.png"
       - step_number: 3
-        guiding_question: |
+        guiding_question: >
           Wann sollte die Greenhouse-Geisser- und wann die Huynh-Feldt-Korrektur
           verwendet werden?
-        guiding_answer: |
-          Entscheidungsregel:
-          - Wenn $\hat{\epsilon}_{GG} < 0{,}75$:
-          Greenhouse-Geisser-Korrektur (konservativer)
-          - Wenn $\hat{\epsilon}_{GG} > 0{,}75$: Huynh-Feldt-Korrektur (weniger
+        guiding_answer: >
+          Entscheidungsregel: - Wenn $\hat{\epsilon}_{GG} < 0{,}75$:
+          Greenhouse-Geisser-Korrektur (konservativer) - Wenn
+          $\hat{\epsilon}_{GG} > 0{,}75$: Huynh-Feldt-Korrektur (weniger
           konservativ)
 
           In unserem Fall mit $\hat{\epsilon}_{GG} = 0{,}76176$ ist die
