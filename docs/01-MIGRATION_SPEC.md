@@ -1,8 +1,12 @@
 # PydanticAI Migration & Modularization Specification
 
+> **⚠️ UPDATED STRATEGY**: This document describes the original migration approach. For the **recommended Gradio-First approach**, see [04-GRADIO_FIRST_MIGRATION.md](./04-GRADIO_FIRST_MIGRATION.md) which reduces timeline from 5+ weeks to 4 weeks and delivers evaluation features earlier.
+
 ## Overview
 
 This document outlines the detailed specifications for migrating the tutoring system from the current OpenAI direct integration to PydanticAI framework while implementing a modular architecture.
+
+**Note**: This represents the original Chainlit-based migration plan. The current recommendation is the Gradio-First approach documented in [04-GRADIO_FIRST_MIGRATION.md](./04-GRADIO_FIRST_MIGRATION.md).
 
 ## Current Architecture Analysis
 
@@ -34,7 +38,7 @@ from tutor.models import Understanding, TutorContext
 understanding_agent = Agent(
     'openai:gpt-4o',
     deps_type=TutorContext,
-    result_type=Understanding,
+    output_type=Understanding,
     system_prompt="""
     You are a statistical tutor evaluating student understanding.
     Check if the student has answered the current guiding and main questions.
@@ -64,7 +68,7 @@ def get_system_prompt(ctx: RunContext[TutorContext]) -> str:
 feedback_agent = Agent(
     'openai:gpt-4o',
     deps_type=TutorContext,
-    result_type=Feedback,
+    output_type=Feedback,
 )
 
 @feedback_agent.system_prompt
@@ -91,7 +95,7 @@ def get_feedback_prompt(ctx: RunContext[TutorContext]) -> str:
 instruction_agent = Agent(
     'openai:gpt-4o',
     deps_type=TutorContext,
-    result_type=Instructions,
+    output_type=Instructions,
 )
 
 @instruction_agent.system_prompt
