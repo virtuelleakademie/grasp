@@ -209,26 +209,26 @@ class Iterations:
                 # Use current_step directly as the step index since steps are 1-indexed in the exercise
                 # but we need to access the step we just completed
                 step_idx = self.current_step - 1
-                
+
                 if checkpoint_idx < 0 or checkpoint_idx >= len(self.exercise.checkpoints):
                     return ""
-                
+
                 checkpoint = self.exercise.checkpoints[checkpoint_idx]
-                
+
                 # If step_idx is out of range, we might be trying to get the last step's answer
                 # after current_step was already incremented
                 if step_idx >= len(checkpoint.steps):
                     step_idx = len(checkpoint.steps) - 1
-                
+
                 if step_idx < 0 or step_idx >= len(checkpoint.steps):
                     return ""
-                    
+
                 answer = checkpoint.steps[step_idx].guiding_answer
                 if not answer or not answer.strip():
                     return ""
-                
+
                 return answer
-                
+
             except Exception as e:
                 return ""
         else:
@@ -239,16 +239,8 @@ class Iterations:
                 return ""
 
     @with_agent_state
-    def load_next_step(self, state=None) -> str:
+    def load_next_step(self, state=None) -> Message:
         """Load the next instruction or advance to the next checkpoint if no iterations are left."""
-        # continue with next checkpoint if no iterations are left
-        message = Message("")
-        if not self.has_checkpoint_iterations_left():
-            if state["debugging"]:
-                print(f"System: No more iterations left for Checkpoint {self.current_checkpoint}.")
-            message += self.load_next_checkpoint()
-            return message
-
         # update counters and state
         self.step = 0
         self.current_step += 1
@@ -256,6 +248,7 @@ class Iterations:
         state["log"].append_system_message(f"**System:** Move to Checkpoint {self.current_checkpoint}, Step {self.current_step}.")
 
         # load next question
+        message = Message("")
         if self.has_another_step():
             if state["debugging"]:
                 print(f"System: Loading guiding question for Checkpoint {self.current_checkpoint} and Step {self.current_step}.")
@@ -271,17 +264,18 @@ class Iterations:
 
     @with_agent_state
     async def clear_sidebar_if_no_image(self, state=None) -> None:
-        """Clear the sidebar if the current checkpoint has no solution image."""
-        if not self.image_solution():
+        """Clear the sidebar if the current checkpoint has no solution image and no step image."""
+        # Only clear if there's no solution image AND no current step image
+        if not self.image_solution() and not self.image():
             await cl.ElementSidebar.set_elements([])
             await cl.ElementSidebar.set_title("")
 
     @with_agent_state
-    def load_next_checkpoint(self, state=None) -> str:
+    def load_next_checkpoint(self, state=None) -> Message:
         """Advance to the next checkpoint and load its main question."""
         self.step = 0
         self.checkpoint = 0
-        self.current_step = 0
+        self.current_step = 1
         self.current_checkpoint += 1
         state["current_understanding"].main_question_answered = False
         state["current_understanding"].guiding_question_answered = False
@@ -292,13 +286,23 @@ class Iterations:
         if self.has_another_checkpoint():
             if state["debugging"]:
                 print(f"System: Loading main question for Checkpoint {self.current_checkpoint} at Step {self.current_step}.")
+
             main_question = self.main_question()
-            guiding_question = self.load_next_step()
-            message += (
-                "Die Hauptfrage ist:\n"
-                f"{main_question}\n\n"
-            )
-            message += guiding_question
+            message += f"Die Hauptfrage ist:\n{main_question}\n\n"
+
+            # Handle first step directly to preserve image
+            if self.has_another_step():
+                # Set the image for the first step
+                message.image = self.image()
+                message += f"\n\nLass uns zuerst über diese Frage nachdenken:\n"
+                message += self.guiding_question()
+            else:
+                message += "Lass uns nun wieder über die eigentliche Frage nachdenken:\n"
+                message += self.main_question()
+                
+            # Update state for the first step
+            state["current_understanding"].guiding_question_answered = False
+            state["log"].append_system_message(f"**System:** Move to Checkpoint {self.current_checkpoint}, Step {self.current_step}.")
         else:
             if state["debugging"]:
                 print(f"System: No more checkpoints available.")
@@ -322,9 +326,11 @@ Ich werde dir Rückmeldungen und Anleitungen geben, damit du die Aufgaben selbst
 Viel Erfolg beim Lernen!
 """)
     # This function is a placeholder for the actual inital message.
-    message += state["iterations"].load_next_checkpoint()
+    checkpoint_message = state["iterations"].load_next_checkpoint()
+    message += checkpoint_message
+    message.image = checkpoint_message.image  # Preserve the image
     await message.send()
-    # Clear sidebar if the first checkpoint has no solution image
+    # Clear sidebar if the first checkpoint has no solution image and no step image
     await state["iterations"].clear_sidebar_if_no_image()
     return
 
@@ -335,45 +341,45 @@ async def chat(input_message: cl.Message, state=None) -> None:
     """Handle incoming messages and respond accordingly."""
     state["log"].write_to_file = True # start writing log to file after first user input
     user_input = input_message.content.strip()
-    
+
     # Special command to jump to a specific checkpoint
     if user_input.startswith("/goto"):
         try:
             # Make sure os is imported for path handling
             import os
-            
+
             parts = user_input.split()
             if len(parts) > 1:
                 checkpoint_num = int(parts[1])
                 if checkpoint_num < 1:
                     await Message("Checkpoint number must be at least 1").send()
                     return
-                    
+
                 iterations = state["iterations"]
                 if checkpoint_num > iterations.n_checkpoints:
                     await Message(f"Error: Maximum checkpoint is {iterations.n_checkpoints}").send()
                     return
-                
+
                 # Send confirmation message
                 message = Message(f"Jumping to Checkpoint {checkpoint_num}")
                 await message.send()
-                
+
                 # Reset progression variables
                 iterations.step = 0
                 iterations.checkpoint = 0
                 iterations.current_step = 0
-                
+
                 # The current_checkpoint is 0-based internally, but 1-based in display
                 iterations.current_checkpoint = checkpoint_num - 1
-                
+
                 # Reset understanding state
                 state["current_understanding"].main_question_answered = False
                 state["current_understanding"].guiding_question_answered = False
                 state["current_understanding"].summary = []
-                
+
                 # Add system log message
                 state["log"].append_system_message(f"**System:** Jumped to Checkpoint {checkpoint_num}.")
-            
+
                 # Get the main question
                 try:
                     if iterations.exercise:
@@ -388,7 +394,7 @@ async def chat(input_message: cl.Message, state=None) -> None:
                 except Exception as e:
                     print(f"Error getting main question: {str(e)}")
                     main_question = "Error loading main question"
-            
+
                 # Load first guiding question
                 try:
                     if iterations.exercise:
@@ -410,14 +416,14 @@ async def chat(input_message: cl.Message, state=None) -> None:
                     print(f"Error getting guiding question: {str(e)}")
                     guiding_question = "Error loading guiding question"
                     image_path = None
-                
+
                 # Create message text
                 message_text = f"Die Hauptfrage ist:\n{main_question}\n\n"
                 message_text += f"\n\nLass uns zuerst über diese Frage nachdenken:\n{guiding_question}"
-                
+
                 # Send the combined message
                 checkpoint_message = Message(message_text)
-                
+
                 # Handle image if it exists
                 if image_path:
                     print(f"Loading image: {image_path}")
@@ -433,18 +439,18 @@ async def chat(input_message: cl.Message, state=None) -> None:
                             print(f"Warning: Image not found at {full_image_path}")
                     else:
                         checkpoint_message.image = image_path
-                
+
                 await checkpoint_message.send()
-                
+
                 # Update current step for future progression
                 iterations.current_step = 1
-                
+
                 # For debugging
                 if state["debugging"]:
                     print(f"System: Jumped to Checkpoint {checkpoint_num}")
                     print(f"Current step: {iterations.current_step}, Current checkpoint: {iterations.current_checkpoint}")
                     print(f"Main question: {main_question[:50]}...")
-                
+
                 # Clear sidebar if needed
                 await iterations.clear_sidebar_if_no_image()
                 return
@@ -458,13 +464,13 @@ async def chat(input_message: cl.Message, state=None) -> None:
             error_message = f"Error jumping to checkpoint: {str(e)}"
             print(error_message)
             await Message(error_message).send()
-            
+
             # Always show traceback for this command to help with debugging
             import traceback
             print(f"Exception in /goto command: {str(e)}")
             print(traceback.format_exc())
             return
-    
+
     message_dict = {"role": "user", "content":[{"type": "text", "text": user_input}]}
     state["messages"].append(message_dict.copy())
     state["log"].append(message_dict.copy())
@@ -520,8 +526,11 @@ async def chat(input_message: cl.Message, state=None) -> None:
         message += iterations.main_answer()
         message += "\n\nLass uns mit der nächsten Aufgabe fortfahren.\n"
         await message.send()
-        message = Message("")
-        message += iterations.load_next_checkpoint()
+        
+        # Load next checkpoint and send it properly with image
+        checkpoint_message = iterations.load_next_checkpoint()
+        await checkpoint_message.send()
+        
         # Clear sidebar if the new checkpoint has no solution image
         await iterations.clear_sidebar_if_no_image()
     elif understanding.guiding_question_answered or not iterations.has_step_iterations_left():
@@ -535,8 +544,15 @@ async def chat(input_message: cl.Message, state=None) -> None:
         current_answer = iterations.guiding_answer()
         message += current_answer
         await message.send()
-        message = Message("")
-        message += iterations.load_next_step()
+        # Check if we need to advance to next checkpoint
+        if not iterations.has_checkpoint_iterations_left():
+            # Handle checkpoint advancement
+            checkpoint_message = iterations.load_next_checkpoint()
+            await checkpoint_message.send()
+        else:
+            # Handle regular step with potential image
+            step_message = iterations.load_next_step()
+            await step_message.send()
     else:
         ## continue with the same guiding question
         if state["debugging"]:
