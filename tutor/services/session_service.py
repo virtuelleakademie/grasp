@@ -1,10 +1,14 @@
 import uuid
 from typing import Optional, Tuple
+from dotenv import load_dotenv
 from tutor.models.context import TutorContext
 from tutor.models.state import ProgressionState, IterationState  
 from tutor.models.responses import Understanding, TutorResponse
 from tutor.services.tutor_coordinator import TutorCoordinator
 from tutor.exercise_loader import ExerciseLoader
+
+# Load environment variables
+load_dotenv()
 
 class SessionService:
     """
