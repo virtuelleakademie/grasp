@@ -17,13 +17,13 @@ metadata:
 first_message: >
   Willkommen zur interaktiven Übung zur einfaktoriellen Varianzanalyse mit
   Messwiederholung! Wir untersuchen gemeinsam eine Studie zur
-  Arbeitszufriedenheit von Job-Einsteigern über drei Zeitpunkte. Schritt für
-  Schritt lernen Sie, wie man die Daten analysiert, interpretiert und wichtige
+  Arbeitszufriedenheit von Job-Einsteigern über drei Zeitpunkte. Schritt für 
+  Schritt lernst du, wie man die Daten analysiert, interpretiert und wichtige
   statistische Konzepte versteht. Los geht's!
 end_message: >
-  Herzlichen Glückwunsch! Sie haben nun die Grundlagen der einfaktoriellen
+  Herzlichen Glückwunsch! Du hast nun die Grundlagen der einfaktoriellen
   Varianzanalyse mit Messwiederholung verstanden, inklusive Messwertzerlegung,
-  Effektgrössen und Sphärizitätskorrektur. Nutzen Sie dieses Wissen, um eigene
+  Effektgrössen und Sphärizitätskorrektur. Nutze dieses Wissen, um eigene
   Daten sicher zu analysieren und zu interpretieren.
 checkpoints:
   - checkpoint_number: 1
@@ -41,7 +41,7 @@ checkpoints:
     steps:
       - step_number: 1
         guiding_question: >
-          Was sind Bedingungseffekte und Personeneffekte? Berechnen Sie
+          Was sind Bedingungseffekte und Personeneffekte? Berechne
           exemplarisch den Bedingungseffekt $t_2$ (nach 3 Monaten) und den
           Personeneffekt $p_1$ (Person 1) anhand der Tabelle.
         guiding_answer: >
@@ -68,9 +68,7 @@ checkpoints:
           kann weder durch stabile Personenunterschiede noch durch die
           Haupteffekte der Bedingungen erklärt werden und dient als Fehlerterm
           für den F-Test.
-
-          Formel: $$QS_{Res} = QS_{tot} - QS_{zwP} - QS_{zwA}$$
-        image: "figures/fig-1.png"
+    image: "figures/fig-1.png"
   - checkpoint_number: 2
     main_question: >
       Wie unterscheiden sich nicht-partielle und partielle Effektgrössen bei der
@@ -91,8 +89,10 @@ checkpoints:
       - step_number: 1
         guiding_question: >
           Gegeben sind: $QS_{zwA} = 40$, $QS_{zwP} = 60$, $QS_{Res} = 54$.
-          Berechnen Sie aus diesen Angaben beide Effektgrössen $\hat{\eta}^2$
-          und $\hat{\eta}^2_p$ und erklären Sie den Unterschied.
+          Berechne aus diesen Angaben beide Effektgrössen $\hat{\eta}^2$
+          und $\hat{\eta}^2_p$ und erkläre den Unterschied. Schreibe für $\hat{\eta}^2$
+          in der Antwort am besten eta^2 und sage dazu, ob du das partielle oder 
+          das nicht-partielle meinst.
 
           **Formeln für Effektgrössen:** $$\hat{\eta}^2 =
           \frac{QS_{zwA}}{QS_{tot}}$$ (nicht-partiell)
@@ -134,8 +134,8 @@ checkpoints:
         image: null
   - checkpoint_number: 3
     main_question: >
-      Was ist Sphärizität, wie wird sie getestet, und wie korrigiert man bei
-      Verletzung den F-Test der Messwiederholungs-ANOVA?
+      Was ist Sphärizität, wie wird sie getestet, und wie sollte man bei
+      Verletzung den F-Test der Messwiederholungs-ANOVA korrigieren?
     main_answer: >
       Sphärizität bedeutet, dass die Varianzen aller Differenzvariablen (z.B.
       $X_1 - X_2$, $X_1 - X_3$, $X_2 - X_3$) gleich sind. Sie wird mit dem
@@ -156,33 +156,11 @@ checkpoints:
           statistisch nicht zwingend erforderlich. Für diesen Test wählen wir
           wegen 'Nullhypothese = Wunschhypothese' ein $\alpha=0.1$.
         image: "figures/fig-3.png"
+        
       - step_number: 2
         guiding_question: >
-          Obwohl die Sphärizitätsannahme nicht verletzt ist, wollen wir der
-          Übung halber die korrigierten Zähler- und Nennerfreiheitsgrade
-          berechnen. Bestimmen Sie zunächst die ursprünglichen Freiheitsgrade
-          für den Bedingungseffekt ($J = 3$ Faktorstufen). Korrigieren Sie diese
-          dann mit $\hat{\epsilon}_{GG} = 0{,}76176$. Die unkorrigierten
-          Nennerfreiheitsgrade des F-Tests sind in diesem Modell $df_{Res} = 8$.
-        guiding_answer: >
-          **Schritt 1: Ursprüngliche Freiheitsgrade bestimmen** $df_{zwA} = J -
-          1 = 3 - 1 = 2$
-
-          **Schritt 2: Korrigierte Freiheitsgrade berechnen** - Zähler:
-          $df_{zwA}^{korr} = 2 \times 0{,}76176 = 1{,}524$ - Nenner:
-          $df_{Res}^{korr} = 8 \times 0{,}76176 = 6{,}094$
-
-          Dies führt zu einem konservativeren (grösseren) kritischen F-Wert und
-          somit zu einem strengeren Test.
-
-          **Kritischer F-Wert:** - Ursprünglich: $F_{(0{,}95; 2; 8)} = 4{,}459$
-          - Korrigiert: $F_{(0{,}95; 1{,}524; 6{,}094)} \approx 5{,}2$
-          (konservativer)
-        image: "figures/fig-3.png"
-      - step_number: 3
-        guiding_question: >
-          Wann sollte die Greenhouse-Geisser- und wann die Huynh-Feldt-Korrektur
-          verwendet werden?
+          Angenommen der Mauchly-Test wäre signifikant: Wann sollte dann die 
+          Greenhouse-Geisser- und wann die Huynh-Feldt-Korrektur verwendet werden?
         guiding_answer: >
           Entscheidungsregel: - Wenn $\hat{\epsilon}_{GG} < 0{,}75$:
           Greenhouse-Geisser-Korrektur (konservativer) - Wenn
