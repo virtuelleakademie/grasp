@@ -150,11 +150,12 @@ checkpoints:
           Der Mauchly-Test zeigt einen p-Wert von $0{,}56973$. Was bedeutet das
           für die Sphärizitätsannahme?
         guiding_answer: >
-          Da der p-Wert $0{,}56973$ grösser als $0{,}05$ ist, ist die
-          Sphärizitätsannahme **nicht verletzt**. Das bedeutet, die Varianzen
-          der Differenzen sind annähernd gleich, und eine Korrektur ist
-          statistisch nicht zwingend erforderlich. Für diesen Test wählen wir
-          wegen 'Nullhypothese = Wunschhypothese' ein $\alpha=0.1$.
+          Für diesen Test wählen wir wegen 'Nullhypothese = Wunschhypothese' ein
+          $\alpha=0.1$. Da der p-Wert $0{,}56973$ grösser als $\alpha$ ist, ist
+          die Sphärizitätsannahme **nicht verletzt**. Das bedeutet, die
+          Varianzen der Differenzen sind annähernd gleich, und eine Korrektur
+          ist statistisch nicht zwingend erforderlich. Für diesen Test wählen
+          wir wegen 'Nullhypothese = Wunschhypothese' ein $\alpha=0.1$.
         image: "figures/fig-3.png"
       - step_number: 2
         guiding_question: >
